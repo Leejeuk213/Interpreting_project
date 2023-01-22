@@ -1,0 +1,193 @@
+
+Store Variables 
+Ren'Py has a number of store variables that control its function. Store
+variables may be changed at any time. If a store variable is changed after
+the game has started, it will be be saved and loaded by the save system,
+and rolled-back when rollback occurs.
+
+
+adv = Character(...) 
+This is a template ADV-mode character, and the default character kind
+that is used when Character() is called.
+
+
+
+_autosave = True 
+This variable can be set to False to disable autosave.
+
+
+
+_confirm_quit = True 
+This determines if quitting the game asks for confirmation. It is
+set to False during the splashscreen, and is ignored when in the main
+menu.
+
+
+
+default_mouse 
+This is undefined by default. If defined, and if config.mouse is
+set at game startup, this is a key that is used to look up a mouse cursor
+when the current cursor does not exist, or is the default. This is used by
+config.mouse and MouseDisplayable().
+
+
+
+_dismiss_pause = True 
+If True, the player can dismiss pauses and transitions.
+
+
+
+_game_menu_screen = "save" 
+This is the screen that is displayed when entering the game menu with no
+more specific screen selected. (For example, when right-clicking, pressing
+escape, or when ShowMenu() is not given an argument.) If None, entry
+to the game menu is disallowed.
+This is set to None at the start of the splashscreen, and restored to its
+original value when the splashscreen ends.
+
+
+
+_history = True 
+If true, Ren'Py will record dialogue history when a line is shown. (Note
+that config.history_list_length must be set as well.)
+
+
+
+_history_list = [ ] 
+This is a list of history objects, corresponding to each line of history
+from oldest to newest. See the History section for more
+information.
+
+
+
+_ignore_action = None 
+When this is not None, it's an action that is run after clicking Ignore
+on the error handling screen. The action is usually Jump(), to jump
+the game to a place that can recover from an error. If None, control
+continues with the next Ren'Py statement.
+
+
+
+main_menu = False 
+Ren'Py sets this variable to True while in the main menu. This can be used
+to have screens display differently while in the main menu.
+
+
+
+_menu = False 
+Ren'Py sets this variable to True when entering a main menu or game menu
+context.
+
+
+
+menu = renpy.display_menu 
+The function that's called to display the in-game menu. It should take the same
+arguments as renpy.display_menu(). Assigning nvl_menu() to this
+will display an nvl-mode menu.
+
+
+
+mouse_visible = True 
+Controls if the mouse is visible. This is automatically set to true when
+entering the standard game menus.
+
+
+
+name_only = Character(...) 
+This is a template character that is used when a string is given as the
+character name in a say statement. This:
+"Eileen" "Hello, world."
+
+
+is equivalent to:
+$ temp_char = Character("Eileen", kind=name_only)
+temp_char "Hello, world."
+
+
+except that the temp_char variable is not used.
+
+
+
+narrator = Character(...) 
+This is the character that speaks narration (say statements that do not
+give a character or character name). This:
+"Hello, world."
+
+
+is equivalent to:
+narrator "Hello, world."
+
+
+
+
+
+_quit_slot = None 
+If not None, this should be a string giving the name of a file slot.
+When Ren'Py quits, the game will be saved in this slot.
+
+
+
+_rollback = True 
+Controls if rollback is allowed.
+
+
+
+say = ... 
+A function that is called by Ren'Py to display dialogue. This is called
+with three arguments. The first argument (who) is the character saying the
+dialogue (or None for the narrator). The second argument (what) is what dialogue
+is being said.
+The third argument must be a keyword argument named interact and defaulting
+to True. If true, the say function will wait for a click. If false, it will
+immediately return with the dialogue displayed on the screen.
+It's rare to call this function directly, as one can simply call a character
+with dialogue. This variable mostly exists to be redefined, as a way of
+hooking the say statement.
+
+
+
+save_name = "" 
+A save name that is included with saves.
+
+
+
+_screenshot_pattern = None 
+If not None, this string is used in preference to config.screenshot_pattern
+to determine the filename of a screenshot. Please see the documentation for
+that variable for the format of the string.
+
+
+
+_skipping = True 
+Controls if skipping is allowed.
+
+
+
+_version = ... 
+This is set to config.version when a new game is started. It can be
+used by the after_load label or config.after_load_callbacks to
+determine which upgrades need to be done.
+This is only set once, upon the initial start. After that, the game is
+responsible for updating _version as necessary.
+
+
+
+_window = False 
+This set by the window show and window hide statements, and indirectly
+by window auto. If true, the dialogue window is shown during non-dialogue
+statements.
+
+
+
+_window_auto = False 
+This is set to true by window auto and to false by window show and
+window hide. If true, the window auto behavior occurs.
+
+
+
+_window_subtitle = '' 
+This is appended to config.window_title to produce the caption for the game
+window. This is automatically set to config.menu_window_subtitle while in
+the game menu.
+
+

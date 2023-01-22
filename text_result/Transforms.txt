@@ -1,0 +1,209 @@
+
+Transforms 
+A transform can be applied to a displayable to yield another
+displayable. The built-in transforms are used to control where an
+object is placed on the screen, while user-defined transforms
+can cause more complex effects, like motion, zoom, and rotation.
+Transforms can be applied by giving the at clause to the scene and
+show statements. The following applies the "right" transform to
+the eileen happy displayable.:
+show eileen happy at right
+
+
+Multiple transforms can be applied by separating them with commas. These
+transforms are applied from left-to-right, with the rightmost
+transform taking precedence in the case of conflicts.
+show eileen happy at halfsize, right
+
+
+A displayable always has a transform associated with it. If no
+transform is given, the prior transform is used. When the transform is
+changed, undefined values are taken from the prior transform, or from
+default if there is no prior transform.
+
+Default Transforms 
+Ren'Py ships with a number of transforms defined by default. These
+transforms position things on the screen. Here's a depiction of where
+each default transform will position an image.
+             +-----------------------------------------------------------+
+             |topleft, reset               top                   topright|
+             |                                                           |
+             |                                                           |
+             |                                                           |
+             |                                                           |
+             |                          truecenter                       |
+             |                                                           |
+             |                                                           |
+             |                                                           |
+             |                                                           |
+offscreenleft|left                   center, default                right|offscreenright
+             +-----------------------------------------------------------+
+
+
+The offscreenleft and offscreenright transforms position images off the
+screen. These transforms can be used to move things off the screen
+(remember to hide them afterwards, to ensure that they do not consume
+resources).
+The transforms are:
+
+
+center 
+Centers horizontally, and aligns to the bottom of the screen.
+
+
+
+default 
+Centers horizontally, and aligns to the bottom of the screen. This
+can be redefined via config.default_transform to change the
+default placement of images shown with the show or scene statements.
+
+
+
+left 
+Aligns to the bottom-left corner of the screen.
+
+
+
+offscreenleft 
+Places the displayable off the left side of the screen,
+aligned to the bottom of the screen.
+
+
+
+offscreenright 
+Places the displayable off the left side of the screen,
+aligned to the bottom of the screen.
+
+
+
+reset 
+Resets the transform. Places the displayable in the top-left
+corner of the screen, and also eliminates any zoom, rotation, or
+other effects.
+
+
+
+right 
+Aligns to the bottom-right corner of the screen.
+
+
+
+top 
+Centers horizontally, and aligns to the top of the screen.
+
+
+
+topleft 
+Aligns to the top-left corner of the screen.
+
+
+
+topright 
+Aligns to the top-right corner of the screen.
+
+
+
+truecenter 
+Centers both horizontally and vertically.
+
+
+
+Creator-Defined Transforms 
+A creator can define a transform using the
+animation and transformation language, or the
+Transform function.
+
+
+
+Default Transforms 
+Ren'Py ships with a number of transforms defined by default. These
+transforms position things on the screen. Here's a depiction of where
+each default transform will position an image.
+             +-----------------------------------------------------------+
+             |topleft, reset               top                   topright|
+             |                                                           |
+             |                                                           |
+             |                                                           |
+             |                                                           |
+             |                          truecenter                       |
+             |                                                           |
+             |                                                           |
+             |                                                           |
+             |                                                           |
+offscreenleft|left                   center, default                right|offscreenright
+             +-----------------------------------------------------------+
+
+
+The offscreenleft and offscreenright transforms position images off the
+screen. These transforms can be used to move things off the screen
+(remember to hide them afterwards, to ensure that they do not consume
+resources).
+The transforms are:
+
+
+center 
+Centers horizontally, and aligns to the bottom of the screen.
+
+
+
+default 
+Centers horizontally, and aligns to the bottom of the screen. This
+can be redefined via config.default_transform to change the
+default placement of images shown with the show or scene statements.
+
+
+
+left 
+Aligns to the bottom-left corner of the screen.
+
+
+
+offscreenleft 
+Places the displayable off the left side of the screen,
+aligned to the bottom of the screen.
+
+
+
+offscreenright 
+Places the displayable off the left side of the screen,
+aligned to the bottom of the screen.
+
+
+
+reset 
+Resets the transform. Places the displayable in the top-left
+corner of the screen, and also eliminates any zoom, rotation, or
+other effects.
+
+
+
+right 
+Aligns to the bottom-right corner of the screen.
+
+
+
+top 
+Centers horizontally, and aligns to the top of the screen.
+
+
+
+topleft 
+Aligns to the top-left corner of the screen.
+
+
+
+topright 
+Aligns to the top-right corner of the screen.
+
+
+
+truecenter 
+Centers both horizontally and vertically.
+
+
+
+Creator-Defined Transforms 
+A creator can define a transform using the
+animation and transformation language, or the
+Transform function.
+

@@ -1,0 +1,362 @@
+
+Voice 
+Ren'Py includes support for playing back voice in conjunction with
+dialogue. This is done through the voice statement, which gives the
+voice filename to play:
+voice "line0001.ogg"
+"Welcome to Ren'Py"
+
+
+Normally, a playing voice is stopped at the start of the next
+interaction. The voice sustain statement can sustain voice playback
+through an interaction.
+voice "line0001.ogg"
+"Welcome to Ren'Py..."
+
+voice sustain
+"... your digital storytelling engine."
+
+
+The config.voice_filename_format variable allows you to customize
+the voice filename, making it possible to omit directories and extensions.
+
+Voice Tags 
+Ren'Py includes a voice tag system that makes it possible to selectively
+mute or unmute a character's voice. To take advantage of this system,
+supply a voice_tag argument to each Character(), and use the
+SetVoiceMute() or ToggleVoiceMute() actions to allow the
+player to toggle the voice.
+For example:
+define e = Character("Eileen", voice_tag="eileen")
+define l = Character("Lucy", voice_tag="lucy")
+
+screen voice_toggle:
+    vbox:
+        textbutton "Mute Eileen" action ToggleVoiceMute("eileen")
+        textbutton "Mute Lucy" action ToggleVoiceMute("lucy")
+
+label start:
+    show screen voice_toggle
+
+    voice "e01.ogg"
+    e "You can turn a character's voice on and off."
+
+    voice "l01.ogg"
+    l "Yeah! Now I can finally shut you up!"
+
+    voice "l02.ogg"
+    l "Wait... that means they can mute me as well! Really?"
+
+
+
+
+Automatic Voice 
+Ren'Py includes support for automatically determining the voice file to play,
+making it possible to play back voice without having to put voice statements
+before each line of dialogue.
+This is done by creating voice files that match the identifier for each line
+of dialogue. To determine the identifiers to use, first export the dialogue
+to a spreadsheet by choosing from the launcher "Extract Dialogue", "Tab-delimited
+Spreadsheet (dialogue.tab)", and "Continue". This will produce a file, dialogue.tab,
+that can be loaded in a spreadsheet program.
+The first column of the spreadsheet is the identifier to use, with other
+columns giving more information about the dialogue.
+To make Ren'Py automatically play voices, set config.auto_voice to
+a string containing {id}. When dialogue occurs, {id} is replaced with
+the dialogue identifier, forming a filename. If the filename exists, it is
+played.
+For example, if we have:
+config.auto_voice = "voice/{id}.ogg"
+
+
+And the dialogue identifier is demo_minigame_03fc91ef, then when
+the corresponding line is shown, Ren'Py will look for the file
+voice/demo_minigame_03fc91ef.ogg. If the file exists, Ren'Py will
+play it.
+
+
+Voice Functions 
+
+
+_get_voice_info() 
+Returns information about the voice being played by the current
+say statement. This function may only be called while a say statement
+is executing.
+The object returned has the following fields:
+
+
+VoiceInfo.filename 
+The filename of the voice to be played, or None if no files
+should be played.
+
+
+
+VoiceInfo.auto_filename 
+The filename that Ren'Py looked in for automatic-voicing
+purposes, or None if one could not be found.
+
+
+
+VoiceInfo.tag 
+The voice_tag parameter supplied to the speaking Character.
+
+
+
+VoiceInfo.sustain 
+False if the file was played as part of this interaction. True if
+it was sustained from a previous interaction.
+
+
+
+
+voice(filename, tag=None)
+Plays filename on the voice channel. The equivalent of the voice
+statement.
+
+filename
+The filename to play. This is used with
+config.voice_filename_format to produce the
+filename that will be played.
+tag
+If this is not None, it should be a string giving a
+voice tag to be played. If None, this takes its
+default value from the voice_tag of the Character
+that causes the next interaction.
+The voice tag is used to specify which character is
+speaking, to allow a user to mute or unmute the
+voices of particular characters.
+
+
+
+
+
+voice_can_replay() 
+Returns true if it's possible to replay the current voice.
+
+
+
+voice_replay() 
+Replays the current voice, if possible.
+
+
+
+voice_sustain(ignored=u'', **kwargs) 
+The equivalent of the voice sustain statement.
+
+
+
+Voice Actions 
+
+
+PlayCharacterVoice(voice_tag, sample, selected=False) 
+This plays sample on the voice channel, as if said by a
+character with voice_tag.
+
+sample
+The full path to a sound file. No voice-related handling
+of this file is done.
+selected
+If True, buttons using this action will be marked as selected
+while the sample is playing.
+
+
+
+
+SetCharacterVolume(voice_tag, volume=None) 
+This allows the volume of each characters to be adjusted.
+If volume is None, this returns a BarValue that
+controls the value of voice_tag. Otherwise, this set it to volume.
+volume is a number between 0.0 and 1.0, and is interpreted as a
+fraction of the mixer volume for voice channel.
+
+
+
+SetVoiceMute(voice_tag, mute) 
+If mute is true, mutes voices that are played with the given
+voice_tag. If mute is false, unmutes voices that are played
+with voice_tag.
+
+
+
+ToggleVoiceMute(voice_tag, invert=False) 
+Toggles the muting of voice_tag. This is selected if
+the given voice tag is muted, unless invert is true,
+in which case it's selected if the voice is unmuted.
+
+
+
+VoiceReplay(*args, **kwargs) 
+Replays the most recently played voice.
+
+
+
+
+Voice Tags 
+Ren'Py includes a voice tag system that makes it possible to selectively
+mute or unmute a character's voice. To take advantage of this system,
+supply a voice_tag argument to each Character(), and use the
+SetVoiceMute() or ToggleVoiceMute() actions to allow the
+player to toggle the voice.
+For example:
+define e = Character("Eileen", voice_tag="eileen")
+define l = Character("Lucy", voice_tag="lucy")
+
+screen voice_toggle:
+    vbox:
+        textbutton "Mute Eileen" action ToggleVoiceMute("eileen")
+        textbutton "Mute Lucy" action ToggleVoiceMute("lucy")
+
+label start:
+    show screen voice_toggle
+
+    voice "e01.ogg"
+    e "You can turn a character's voice on and off."
+
+    voice "l01.ogg"
+    l "Yeah! Now I can finally shut you up!"
+
+    voice "l02.ogg"
+    l "Wait... that means they can mute me as well! Really?"
+
+
+
+
+Automatic Voice 
+Ren'Py includes support for automatically determining the voice file to play,
+making it possible to play back voice without having to put voice statements
+before each line of dialogue.
+This is done by creating voice files that match the identifier for each line
+of dialogue. To determine the identifiers to use, first export the dialogue
+to a spreadsheet by choosing from the launcher "Extract Dialogue", "Tab-delimited
+Spreadsheet (dialogue.tab)", and "Continue". This will produce a file, dialogue.tab,
+that can be loaded in a spreadsheet program.
+The first column of the spreadsheet is the identifier to use, with other
+columns giving more information about the dialogue.
+To make Ren'Py automatically play voices, set config.auto_voice to
+a string containing {id}. When dialogue occurs, {id} is replaced with
+the dialogue identifier, forming a filename. If the filename exists, it is
+played.
+For example, if we have:
+config.auto_voice = "voice/{id}.ogg"
+
+
+And the dialogue identifier is demo_minigame_03fc91ef, then when
+the corresponding line is shown, Ren'Py will look for the file
+voice/demo_minigame_03fc91ef.ogg. If the file exists, Ren'Py will
+play it.
+
+
+Voice Functions 
+
+
+_get_voice_info() 
+Returns information about the voice being played by the current
+say statement. This function may only be called while a say statement
+is executing.
+The object returned has the following fields:
+
+
+VoiceInfo.filename 
+The filename of the voice to be played, or None if no files
+should be played.
+
+
+
+VoiceInfo.auto_filename 
+The filename that Ren'Py looked in for automatic-voicing
+purposes, or None if one could not be found.
+
+
+
+VoiceInfo.tag 
+The voice_tag parameter supplied to the speaking Character.
+
+
+
+VoiceInfo.sustain 
+False if the file was played as part of this interaction. True if
+it was sustained from a previous interaction.
+
+
+
+
+voice(filename, tag=None)
+Plays filename on the voice channel. The equivalent of the voice
+statement.
+
+filename
+The filename to play. This is used with
+config.voice_filename_format to produce the
+filename that will be played.
+tag
+If this is not None, it should be a string giving a
+voice tag to be played. If None, this takes its
+default value from the voice_tag of the Character
+that causes the next interaction.
+The voice tag is used to specify which character is
+speaking, to allow a user to mute or unmute the
+voices of particular characters.
+
+
+
+
+
+voice_can_replay() 
+Returns true if it's possible to replay the current voice.
+
+
+
+voice_replay() 
+Replays the current voice, if possible.
+
+
+
+voice_sustain(ignored=u'', **kwargs) 
+The equivalent of the voice sustain statement.
+
+
+
+Voice Actions 
+
+
+PlayCharacterVoice(voice_tag, sample, selected=False) 
+This plays sample on the voice channel, as if said by a
+character with voice_tag.
+
+sample
+The full path to a sound file. No voice-related handling
+of this file is done.
+selected
+If True, buttons using this action will be marked as selected
+while the sample is playing.
+
+
+
+
+SetCharacterVolume(voice_tag, volume=None) 
+This allows the volume of each characters to be adjusted.
+If volume is None, this returns a BarValue that
+controls the value of voice_tag. Otherwise, this set it to volume.
+volume is a number between 0.0 and 1.0, and is interpreted as a
+fraction of the mixer volume for voice channel.
+
+
+
+SetVoiceMute(voice_tag, mute) 
+If mute is true, mutes voices that are played with the given
+voice_tag. If mute is false, unmutes voices that are played
+with voice_tag.
+
+
+
+ToggleVoiceMute(voice_tag, invert=False) 
+Toggles the muting of voice_tag. This is selected if
+the given voice tag is muted, unless invert is true,
+in which case it's selected if the voice is unmuted.
+
+
+
+VoiceReplay(*args, **kwargs) 
+Replays the most recently played voice.
+
+

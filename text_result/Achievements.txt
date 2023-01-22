@@ -1,0 +1,122 @@
+
+Achievements 
+The Achievement module allows the developer to grant achievements to the
+player, to clear achievements, and to determine if an achievement has been
+granted. It also allows the recording of progress towards an achievement.
+By default, the achievement stores information in the persistent file. If
+Steam support is available and enabled, achievement information is
+automatically synchronized with Steam.
+Steam support must be added to Ren'Py, to ensure that it is only distributed
+by creators that have been accepted to the Steam partner program. To install
+it, choose "preferences", "Install libraries", "Install Steam Support".
+
+
+achievement.Sync() 
+An action that calls achievement.sync(). This is only sensitive if
+achievements are out of sync.
+
+
+
+achievement.clear(name) 
+Clears the achievement with name.
+
+
+
+achievement.clear_all() 
+Clears all achievements.
+
+
+
+achievement.get_progress(name) 
+Returns the current progress towards the achievement identified
+with name, or 0 if no progress has been registered for it or if
+the achievement is not known.
+
+
+
+achievement.grant(name) 
+Grants the achievement with name, if it has not already been
+granted.
+
+
+
+achievement.has(name) 
+Returns true if the player has been granted the achievement with
+name.
+
+
+
+achievement.progress(name, complete) 
+Reports progress towards the achievement with name, if that
+achievement has not been granted. The achievement must be defined
+with a completion amount.
+
+name
+The name of the achievement. This should be the name of the
+achievement, and not the stat.
+complete
+An integer giving the number of units completed towards the
+achievement.
+
+
+
+
+achievement.register(name, **kwargs) 
+Registers an achievement. Achievements are not required to be
+registered, but doing so allows one to pass information to the
+backends.
+
+name
+The name of the achievement to register.
+
+The following keyword parameters are optional.
+
+steam
+The name to use on steam. If not given, defaults to name.
+stat_max
+The integer value of the stat at which the achievement unlocks.
+stat_modulo
+If the progress modulo stat_max is 0, progress is displayed
+to the user. For example, if stat_modulo is 10, progress will
+be displayed to the user when it reaches 10, 20, 30, etc. If
+not given, this defaults to 0.
+
+
+
+
+achievement.sync() 
+Synchronizes registered achievements between local storage and
+other backends. (For example, Steam.)
+
+Variables that control achievements are:
+
+
+achievement.steam_position = None 
+If not None, this sets the position of the steam notification popup.
+This must be a string, one of "top left", "top right", "bottom left",
+or "bottom right".
+
+
+
+define config.steam_appid = None 
+If not None, this should be the Steam appid. Ren'Py will automatically
+set this appid when it starts. This needs to be set using the define
+statement
+
+define config.steam_appid = 12345
+
+
+Steamworks API 
+When Steam is available, a ctypes-based binding to the Steamworks API is
+available as achievement.steamapi. The binding is an instance of the
+steamapi module, as found here,
+and represents a machine translation of the C++ Steamworks API to Python.
+
+
+
+Steamworks API 
+When Steam is available, a ctypes-based binding to the Steamworks API is
+available as achievement.steamapi. The binding is an instance of the
+steamapi module, as found here,
+and represents a machine translation of the C++ Steamworks API to Python.
+

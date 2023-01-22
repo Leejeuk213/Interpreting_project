@@ -1,0 +1,532 @@
+
+Advanced GUI 
+This section has some odds and ends about advanced usage of the GUI.
+
+Python Functions 
+There are some Python functions that support the GUI.
+
+
+gui.button_properties(kind) 
+Given a kind of button, returns a dictionary giving standard style
+properties for that button. This sets:
+
+background
+As described below.
+padding
+To gui.kind_borders.padding (if it exists).
+xsize
+To gui.kind_width (if it exists).
+ysize
+To gui.kind_height (if it exists).
+
+(Note that if kind is the string "nvl_button", this will look for
+the gui.nvl_button_background variable.)
+The background is a frame that takes its background picture from
+the first existing one of:
+
+gui/button/kind_[prefix_].background.png
+gui/button/[prefix_].background.png
+
+If a gui variables named gui.kind_borders exists, it's
+used. Otherwise, gui.button_borders is used. If gui.kind_tile
+exists, it determines if the borders are tiled, else gui.button_tile
+controls tiling.
+For what [prefix_] means, check out the style prefix search
+documentation.
+
+
+
+gui.init(width, height, fov=75) 
+Initializes the gui.
+
+width
+The width of the default window.
+height
+The height of the default window.
+fov
+The field of view of the 3d stage.
+
+
+
+
+gui.rebuild() 
+Rebuilds the GUI.
+Note: This is a very slow function.
+
+
+
+gui.text_properties(kind=None, accent=False) 
+Given a kind of button, returns a dictionary giving standard style
+properties for that button. This sets:
+
+font
+To gui.kind_text_font, if it exists.
+size
+To gui.kind_text_size, if it exists.
+xalign
+To gui.kind_text_xalign, if it exists.
+text_align
+To gui.kind_text_xalign, if it exists.
+layout
+To "subtitle" if gui.kind_text_xalign is greater than zero
+and less than one.
+
+There are also a number of variables that set the text
+color style property:
+
+color
+To gui.kind_text_color, if it exists. If the variable is not
+set, and accent is True, sets the text color to the default
+accent color.
+insensitive_color
+To gui.kind_text_insensitive_color, if it exists.
+idle_color
+To gui.kind_text_idle_color, if it exists.
+hover_color
+To gui.kind_text_hover_color, if it exists.
+selected_color
+To gui.kind_text_selected_color, if it exists.
+
+All other text style properties
+are available. When kind is not None,
+position style properties
+are also available. For
+example, gui.kind_text_outlines sets the outlines style property,
+gui.kind_text_kerning sets kerning, and so on.
+
+
+
+gui.variant(f, variant=None) 
+A decorator that causes a function to be called when the gui is first
+initialized, and again each time the gui is rebuilt.  This is intended
+to be used as a function decorator,  of the form:
+@gui.variant
+def small():
+    gui.text_size = 30
+    # ...
+
+
+It can also be called with f (a function) and variant (a string),
+giving the variant name.
+
+
+More on gui.rebuild 
+The gui.rebuild function is a rather slow function that updates the GUI
+to reflect the current state of Ren'Py. What it does is:
+
+Re-runs all of the define statements that define variables in the gui
+namespace.
+Re-runs all of the translate python blocks for the current language.
+Re-runs all of the style statements.
+Rebuilds all of the styles in the system.
+
+Note that init python blocks are not re-run on gui.rebuild. In this way,
+define gui.text_size = persistent.text_size
+
+
+and:
+init python:
+    gui.text_size = persistent.text_size
+
+
+are different.
+
+
+The default statement, the gui namespace, and gui.rebuild 
+The default statement has changed semantics when applied to the gui
+namespace. When applied to a variable in the gui namespace, the
+default statement runs interleaved with the define statement, and
+the default statements are not re-run when gui.rebuild() is called.
+What this means is that if we have:
+default gui.accent_color = "#c04040"
+define gui.hover_color = gui.accent_color
+
+
+The first time the game is run, the accent color will be set, and then
+the hover color will be set to the accent color. (Both are then used to
+set various style colors.)
+However, if as part of the game script, we have:
+$ gui.accent_color = "#4040c0"
+$ gui.rebuild()
+
+
+Ren'Py will only re-run the define, so it will set the hover color to
+the accent color, and then update the styles. This makes it possible
+to have parts of the GUI that change as the game progresses.
+
+
+
+GUI Preferences 
+Ren'Py also supports a GUI preference system, consisting of a single function
+and a pair of actions.
+
+
+gui.SetPreference(name, value, rebuild=True) 
+This Action sets the gui preference with name to value.
+
+rebuild
+If true, the default, gui.rebuild() is called to make
+the changes take effect. This should generally be true, except
+in the case of multiple gui.SetPreference actions, in which case
+it should be False in all but the last one.
+
+This is a very slow action, and probably not suitable for use
+when a button is hovered.
+
+
+
+gui.TogglePreference(name, a, b, rebuild=True) 
+This Action toggles the gui preference with name between
+value a and value b. It is selected if the value is equal
+to a.
+
+rebuild
+If true, the default, gui.rebuild() is called to make
+the changes take effect. This should generally be true, except
+in the case of multiple gui.SetPreference actions, in which case
+it should be False in all but the last one.
+
+This is a very slow action, and probably not suitable for use
+when a button is hovered.
+
+
+
+gui.preference(name, default=...) 
+This function returns the value of the gui preference with
+name.
+
+default
+If given, this value becomes the default value of the gui
+preference. The default value must be given the first time
+the preference is used.
+
+
+
+Example 
+The GUI preference system is used by calling gui.preference() when defining
+variables, with the name of the preference and the default value.
+For example, one can use GUI preferences to define the text font and
+size.
+define gui.text_font = gui.preference("font", "DejaVuSans.ttf")
+define gui.text_size = gui.preference("size", 22)
+
+
+It's then possible to use the gui.SetPreference and gui.TogglePreference
+actions to add change the values of the preferences. Here's some examples
+that can be added to the preferences screen.
+vbox:
+    style_prefix "check"
+    label _("Options")
+    textbutton _("OpenDyslexic") action gui.TogglePreference("font", "OpenDyslexic-Regular.otf", "DejaVuSans.ttf")
+
+vbox:
+    style_prefix "radio"
+    label _("Text Size")
+    textbutton _("Small") action gui.SetPreference("size", 20)
+    textbutton _("Medium") action gui.SetPreference("size", 22)
+    textbutton _("Big") action gui.SetPreference("size", 24)
+
+
+
+
+
+
+Python Functions 
+There are some Python functions that support the GUI.
+
+
+gui.button_properties(kind) 
+Given a kind of button, returns a dictionary giving standard style
+properties for that button. This sets:
+
+background
+As described below.
+padding
+To gui.kind_borders.padding (if it exists).
+xsize
+To gui.kind_width (if it exists).
+ysize
+To gui.kind_height (if it exists).
+
+(Note that if kind is the string "nvl_button", this will look for
+the gui.nvl_button_background variable.)
+The background is a frame that takes its background picture from
+the first existing one of:
+
+gui/button/kind_[prefix_].background.png
+gui/button/[prefix_].background.png
+
+If a gui variables named gui.kind_borders exists, it's
+used. Otherwise, gui.button_borders is used. If gui.kind_tile
+exists, it determines if the borders are tiled, else gui.button_tile
+controls tiling.
+For what [prefix_] means, check out the style prefix search
+documentation.
+
+
+
+gui.init(width, height, fov=75) 
+Initializes the gui.
+
+width
+The width of the default window.
+height
+The height of the default window.
+fov
+The field of view of the 3d stage.
+
+
+
+
+gui.rebuild() 
+Rebuilds the GUI.
+Note: This is a very slow function.
+
+
+
+gui.text_properties(kind=None, accent=False) 
+Given a kind of button, returns a dictionary giving standard style
+properties for that button. This sets:
+
+font
+To gui.kind_text_font, if it exists.
+size
+To gui.kind_text_size, if it exists.
+xalign
+To gui.kind_text_xalign, if it exists.
+text_align
+To gui.kind_text_xalign, if it exists.
+layout
+To "subtitle" if gui.kind_text_xalign is greater than zero
+and less than one.
+
+There are also a number of variables that set the text
+color style property:
+
+color
+To gui.kind_text_color, if it exists. If the variable is not
+set, and accent is True, sets the text color to the default
+accent color.
+insensitive_color
+To gui.kind_text_insensitive_color, if it exists.
+idle_color
+To gui.kind_text_idle_color, if it exists.
+hover_color
+To gui.kind_text_hover_color, if it exists.
+selected_color
+To gui.kind_text_selected_color, if it exists.
+
+All other text style properties
+are available. When kind is not None,
+position style properties
+are also available. For
+example, gui.kind_text_outlines sets the outlines style property,
+gui.kind_text_kerning sets kerning, and so on.
+
+
+
+gui.variant(f, variant=None) 
+A decorator that causes a function to be called when the gui is first
+initialized, and again each time the gui is rebuilt.  This is intended
+to be used as a function decorator,  of the form:
+@gui.variant
+def small():
+    gui.text_size = 30
+    # ...
+
+
+It can also be called with f (a function) and variant (a string),
+giving the variant name.
+
+
+More on gui.rebuild 
+The gui.rebuild function is a rather slow function that updates the GUI
+to reflect the current state of Ren'Py. What it does is:
+
+Re-runs all of the define statements that define variables in the gui
+namespace.
+Re-runs all of the translate python blocks for the current language.
+Re-runs all of the style statements.
+Rebuilds all of the styles in the system.
+
+Note that init python blocks are not re-run on gui.rebuild. In this way,
+define gui.text_size = persistent.text_size
+
+
+and:
+init python:
+    gui.text_size = persistent.text_size
+
+
+are different.
+
+
+The default statement, the gui namespace, and gui.rebuild 
+The default statement has changed semantics when applied to the gui
+namespace. When applied to a variable in the gui namespace, the
+default statement runs interleaved with the define statement, and
+the default statements are not re-run when gui.rebuild() is called.
+What this means is that if we have:
+default gui.accent_color = "#c04040"
+define gui.hover_color = gui.accent_color
+
+
+The first time the game is run, the accent color will be set, and then
+the hover color will be set to the accent color. (Both are then used to
+set various style colors.)
+However, if as part of the game script, we have:
+$ gui.accent_color = "#4040c0"
+$ gui.rebuild()
+
+
+Ren'Py will only re-run the define, so it will set the hover color to
+the accent color, and then update the styles. This makes it possible
+to have parts of the GUI that change as the game progresses.
+
+
+
+More on gui.rebuild 
+The gui.rebuild function is a rather slow function that updates the GUI
+to reflect the current state of Ren'Py. What it does is:
+
+Re-runs all of the define statements that define variables in the gui
+namespace.
+Re-runs all of the translate python blocks for the current language.
+Re-runs all of the style statements.
+Rebuilds all of the styles in the system.
+
+Note that init python blocks are not re-run on gui.rebuild. In this way,
+define gui.text_size = persistent.text_size
+
+
+and:
+init python:
+    gui.text_size = persistent.text_size
+
+
+are different.
+
+
+The default statement, the gui namespace, and gui.rebuild 
+The default statement has changed semantics when applied to the gui
+namespace. When applied to a variable in the gui namespace, the
+default statement runs interleaved with the define statement, and
+the default statements are not re-run when gui.rebuild() is called.
+What this means is that if we have:
+default gui.accent_color = "#c04040"
+define gui.hover_color = gui.accent_color
+
+
+The first time the game is run, the accent color will be set, and then
+the hover color will be set to the accent color. (Both are then used to
+set various style colors.)
+However, if as part of the game script, we have:
+$ gui.accent_color = "#4040c0"
+$ gui.rebuild()
+
+
+Ren'Py will only re-run the define, so it will set the hover color to
+the accent color, and then update the styles. This makes it possible
+to have parts of the GUI that change as the game progresses.
+
+
+GUI Preferences 
+Ren'Py also supports a GUI preference system, consisting of a single function
+and a pair of actions.
+
+
+gui.SetPreference(name, value, rebuild=True) 
+This Action sets the gui preference with name to value.
+
+rebuild
+If true, the default, gui.rebuild() is called to make
+the changes take effect. This should generally be true, except
+in the case of multiple gui.SetPreference actions, in which case
+it should be False in all but the last one.
+
+This is a very slow action, and probably not suitable for use
+when a button is hovered.
+
+
+
+gui.TogglePreference(name, a, b, rebuild=True) 
+This Action toggles the gui preference with name between
+value a and value b. It is selected if the value is equal
+to a.
+
+rebuild
+If true, the default, gui.rebuild() is called to make
+the changes take effect. This should generally be true, except
+in the case of multiple gui.SetPreference actions, in which case
+it should be False in all but the last one.
+
+This is a very slow action, and probably not suitable for use
+when a button is hovered.
+
+
+
+gui.preference(name, default=...) 
+This function returns the value of the gui preference with
+name.
+
+default
+If given, this value becomes the default value of the gui
+preference. The default value must be given the first time
+the preference is used.
+
+
+
+Example 
+The GUI preference system is used by calling gui.preference() when defining
+variables, with the name of the preference and the default value.
+For example, one can use GUI preferences to define the text font and
+size.
+define gui.text_font = gui.preference("font", "DejaVuSans.ttf")
+define gui.text_size = gui.preference("size", 22)
+
+
+It's then possible to use the gui.SetPreference and gui.TogglePreference
+actions to add change the values of the preferences. Here's some examples
+that can be added to the preferences screen.
+vbox:
+    style_prefix "check"
+    label _("Options")
+    textbutton _("OpenDyslexic") action gui.TogglePreference("font", "OpenDyslexic-Regular.otf", "DejaVuSans.ttf")
+
+vbox:
+    style_prefix "radio"
+    label _("Text Size")
+    textbutton _("Small") action gui.SetPreference("size", 20)
+    textbutton _("Medium") action gui.SetPreference("size", 22)
+    textbutton _("Big") action gui.SetPreference("size", 24)
+
+
+
+
+
+Example 
+The GUI preference system is used by calling gui.preference() when defining
+variables, with the name of the preference and the default value.
+For example, one can use GUI preferences to define the text font and
+size.
+define gui.text_font = gui.preference("font", "DejaVuSans.ttf")
+define gui.text_size = gui.preference("size", 22)
+
+
+It's then possible to use the gui.SetPreference and gui.TogglePreference
+actions to add change the values of the preferences. Here's some examples
+that can be added to the preferences screen.
+vbox:
+    style_prefix "check"
+    label _("Options")
+    textbutton _("OpenDyslexic") action gui.TogglePreference("font", "OpenDyslexic-Regular.otf", "DejaVuSans.ttf")
+
+vbox:
+    style_prefix "radio"
+    label _("Text Size")
+    textbutton _("Small") action gui.SetPreference("size", 20)
+    textbutton _("Medium") action gui.SetPreference("size", 22)
+    textbutton _("Big") action gui.SetPreference("size", 24)
+
+
+

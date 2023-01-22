@@ -1,0 +1,595 @@
+
+Statement Equivalents 
+To allow Ren'Py to be scripted in Python, each Ren'Py statement has
+a Python equivalent. This usually consists of a Python function,
+but may also consist of a pattern of Python calls that perform an action
+equivalent to the statement.
+Note that using statement equivalents in lieu of the original statements
+usually removes any possible Lint checks and prediction
+optimizations, making your game less easily checkable and possibly less
+fluid.
+
+Dialogue 
+The Ren'Py Say Statement is equivalent to calling the character
+object as a function. The following displays the same line twice:
+e "Hello, world."
+
+$ e("Hello, world.")
+
+
+Displaying narration can be done the same way, by using the
+narrator character. When calling a character, it's possible to
+supply the keyword argument interact. When interact is False,
+Ren'Py will display the character dialogue box, and will then
+return before performing an interaction.
+This equivalence of characters and function objects works in the other
+direction as well. It is possible to declare a Python function, and
+then use that function in the place of a character object. For
+example, the following function uses a variable to choose between
+two characters.
+define lucy_normal = Character("Lucy")
+define lucy_evil = Character("Evil Lucy")
+
+init python:
+
+    def l(what, **kwargs):
+        if lucy_is_evil:
+            lucy_evil(what, **kwargs)
+        else:
+            lucy_normal(what, **kwargs)
+
+label start:
+
+    $ lucy_is_evil = False
+
+    l "Usually, I feel quite normal."
+
+    $ lucy_is_evil = True
+
+    l "But sometimes, I get really mad!"
+
+
+A function used in this way should either ignore unknown keyword
+arguments, or pass them to a character function. Doing this will
+allow the game to continue working if Ren'Py adds additional keyword
+arguments to character calls.
+
+
+renpy.say(who, what, *args, **kwargs) 
+The equivalent of the say statement.
+
+who
+Either the character that will say something, None for the narrator,
+or a string giving the character name. In the latter case, the
+say() is used to create the speaking character.
+what
+A string giving the line to say. Percent-substitutions are performed
+in this string.
+interact
+If true, Ren'Py waits for player input when displaying the dialogue. If
+false, Ren'Py shows the dialogue, but does not perform an interaction.
+(This is passed in as a keyword argument.)
+
+This function is rarely necessary, as the following three lines are
+equivalent.
+e "Hello, world."
+$ renpy.say(e, "Hello, world.")
+$ e("Hello, world.")
+
+
+
+
+
+Choice Menus 
+The menu statement has an equivalent Python function.
+
+
+renpy.display_menu(items, *, interact=True, screen="choice") 
+This displays a menu to the user. items should be a list of 2-item tuples.
+In each tuple, the first item is a textual label, and the second item is
+the value to be returned if that item is selected. If the value is None,
+the first item is used as a menu caption.
+This function takes many arguments, of which only a few are documented.
+Except for items, all arguments should be given as keyword arguments.
+
+interact
+If false, the menu is displayed, but no interaction is performed.
+screen
+The name of the screen used to display the menu.
+
+Note that most Ren'Py games do not use menu captions, but use narration
+instead. To display a menu using narration, write:
+$ narrator("Which direction would you like to go?", interact=False)
+$ result = renpy.display_menu([ ("East", "east"), ("West", "west") ])
+
+
+
+
+
+Displaying Images 
+The image, scene, show, and hide statements each have an equivalent
+Python function (see Displaying Images for the original statements).
+
+
+renpy.get_at_list(name, layer=None, camera=False) 
+Returns the list of transforms being applied to the image with tag name
+on layer. Returns an empty list if no transforms are being applied, or
+None if the image is not shown.
+If layer is None, uses the default layer for the given tag.
+
+
+
+renpy.hide(name, layer=None) 
+Hides an image from a layer. The Python equivalent of the hide statement.
+
+name
+The name of the image to hide. Only the image tag is used, and
+any image with the tag is hidden (the precise name does not matter).
+layer
+The layer on which this function operates. If None, uses the default
+layer associated with the tag.
+
+
+
+
+renpy.image(name, d) 
+Defines an image. This function is the Python equivalent of the
+image statement.
+
+name
+The name of the image to display, a string.
+d
+The displayable to associate with that image name.
+
+This function may only be run from inside an init block. It is an
+error to run this function once the game has started.
+
+
+
+renpy.scene(layer=u'master') 
+Removes all displayables from layer. This is equivalent to the scene
+statement, when the scene statement is not given an image to show.
+A full scene statement is equivalent to a call to renpy.scene followed by a
+call to renpy.show(). For example:
+scene bg beach
+
+
+is equivalent to:
+$ renpy.scene()
+$ renpy.show("bg beach")
+
+
+
+
+
+renpy.show(name, at_list=[], layer='master', what=None, zorder=0, tag=None, behind=[]) 
+Shows an image on a layer. This is the programmatic equivalent of the show
+statement.
+
+name
+The name of the image to show, a string.
+at_list
+A list of transforms that are applied to the image.
+The equivalent of the at property.
+layer
+A string, giving the name of the layer on which the image will be shown.
+The equivalent of the onlayer property. If None, uses the default
+layer associated with the tag.
+what
+If not None, this is a displayable that will be shown in lieu of
+looking on the image. (This is the equivalent of the show expression
+statement.) When a what parameter is given, name can be used to
+associate a tag with the image.
+zorder
+An integer, the equivalent of the zorder property. If None, the
+zorder is preserved if it exists, and is otherwise set to 0.
+tag
+A string, used to specify the image tag of the shown image. The
+equivalent of the as property.
+behind
+A list of strings, giving image tags that this image is shown behind.
+The equivalent of the behind property.
+
+
+
+
+renpy.show_layer_at(at_list, layer=u'master', reset=True, camera=False) 
+The Python equivalent of the show layer layer at at_list
+statement. If camera is True, the equivalent of the camera statement.
+
+reset
+If true, the transform state is reset to the start when it is shown.
+If false, the transform state is persisted, allowing the new transform
+to update that state.
+
+
+
+
+Transitions 
+The equivalent of the With Statement is the renpy.with_statement()
+function.
+
+
+renpy.with_statement(trans, always=False) 
+Causes a transition to occur. This is the Python equivalent of the
+with statement.
+
+trans
+The transition.
+always
+If True, the transition will always occur, even if the user has
+disabled transitions.
+
+This function returns true if the user chose to interrupt the transition,
+and false otherwise.
+
+
+
+Jump 
+The equivalent of the Jump Statement is the renpy.jump() function.
+
+
+renpy.jump(label) 
+Causes the current statement to end, and control to jump to the given
+label.
+
+
+
+Call 
+The equivalent of the Call Statement is the renpy.call() function.
+
+
+renpy.call(label, *args, from_current=False, **kwargs) 
+Causes the current Ren'Py statement to terminate, and a jump to a
+label to occur. When the jump returns, control will be passed
+to the statement following the current statement.
+
+from_current
+If true, control will return to the current statement, rather than
+the statement following the current statement. (This will lead to
+the current statement being run twice. This must be passed as a
+keyword argument.)
+
+
+
+
+renpy.return_statement(value=None) 
+Causes Ren'Py to return from the current Ren'Py-level call.
+
+
+
+Pause 
+The equivalent of the Pause Statement is the renpy.pause() function.
+
+
+renpy.pause(delay=None, *, hard=False, predict=False, modal=False) 
+Causes Ren'Py to pause. Returns true if the user clicked to end the pause,
+or false if the pause timed out or was skipped.
+
+delay
+If given, the number of seconds Ren'Py should pause for.
+
+The following should be given as keyword arguments:
+
+hard
+This must be given as a keyword argument. When True, Ren'Py may prevent
+the user from clicking to interrupt the pause. If the player enables
+skipping, the hard pause will be skipped. There may be other circumstances
+where the hard pause ends early or prevents Ren'Py from operating properly,
+these will not be treated as bugs.
+In general, using hard pauses is rude. When the user clicks to advance
+the game, it's an explicit request - the user wishes the game to advance.
+To override that request is to assume you understand what the player
+wants more than the player does.
+Calling renpy.pause guarantees that whatever is on the screen will be
+displayed for at least one frame, and hence has been shown to the
+player.
+tl;dr - Don't use renpy.pause with hard=True.
+
+predict
+If True, Ren'Py will end the pause when all prediction, including
+prediction scheduled with renpy.start_predict() and
+renpy.start_predict_screen(), has been finished.
+This also causes Ren'Py to prioritize prediction over display smoothness
+for the duration of the pause. Because of that, it's recommended to not
+display animations during prediction.
+
+modal
+If True or None, the pause will not end when a modal screen is being displayed.
+If false, the pause will end while a modal screen is being displayed.
+
+
+
+
+
+Dialogue 
+The Ren'Py Say Statement is equivalent to calling the character
+object as a function. The following displays the same line twice:
+e "Hello, world."
+
+$ e("Hello, world.")
+
+
+Displaying narration can be done the same way, by using the
+narrator character. When calling a character, it's possible to
+supply the keyword argument interact. When interact is False,
+Ren'Py will display the character dialogue box, and will then
+return before performing an interaction.
+This equivalence of characters and function objects works in the other
+direction as well. It is possible to declare a Python function, and
+then use that function in the place of a character object. For
+example, the following function uses a variable to choose between
+two characters.
+define lucy_normal = Character("Lucy")
+define lucy_evil = Character("Evil Lucy")
+
+init python:
+
+    def l(what, **kwargs):
+        if lucy_is_evil:
+            lucy_evil(what, **kwargs)
+        else:
+            lucy_normal(what, **kwargs)
+
+label start:
+
+    $ lucy_is_evil = False
+
+    l "Usually, I feel quite normal."
+
+    $ lucy_is_evil = True
+
+    l "But sometimes, I get really mad!"
+
+
+A function used in this way should either ignore unknown keyword
+arguments, or pass them to a character function. Doing this will
+allow the game to continue working if Ren'Py adds additional keyword
+arguments to character calls.
+
+
+renpy.say(who, what, *args, **kwargs) 
+The equivalent of the say statement.
+
+who
+Either the character that will say something, None for the narrator,
+or a string giving the character name. In the latter case, the
+say() is used to create the speaking character.
+what
+A string giving the line to say. Percent-substitutions are performed
+in this string.
+interact
+If true, Ren'Py waits for player input when displaying the dialogue. If
+false, Ren'Py shows the dialogue, but does not perform an interaction.
+(This is passed in as a keyword argument.)
+
+This function is rarely necessary, as the following three lines are
+equivalent.
+e "Hello, world."
+$ renpy.say(e, "Hello, world.")
+$ e("Hello, world.")
+
+
+
+
+
+Choice Menus 
+The menu statement has an equivalent Python function.
+
+
+renpy.display_menu(items, *, interact=True, screen="choice") 
+This displays a menu to the user. items should be a list of 2-item tuples.
+In each tuple, the first item is a textual label, and the second item is
+the value to be returned if that item is selected. If the value is None,
+the first item is used as a menu caption.
+This function takes many arguments, of which only a few are documented.
+Except for items, all arguments should be given as keyword arguments.
+
+interact
+If false, the menu is displayed, but no interaction is performed.
+screen
+The name of the screen used to display the menu.
+
+Note that most Ren'Py games do not use menu captions, but use narration
+instead. To display a menu using narration, write:
+$ narrator("Which direction would you like to go?", interact=False)
+$ result = renpy.display_menu([ ("East", "east"), ("West", "west") ])
+
+
+
+
+
+Displaying Images 
+The image, scene, show, and hide statements each have an equivalent
+Python function (see Displaying Images for the original statements).
+
+
+renpy.get_at_list(name, layer=None, camera=False) 
+Returns the list of transforms being applied to the image with tag name
+on layer. Returns an empty list if no transforms are being applied, or
+None if the image is not shown.
+If layer is None, uses the default layer for the given tag.
+
+
+
+renpy.hide(name, layer=None) 
+Hides an image from a layer. The Python equivalent of the hide statement.
+
+name
+The name of the image to hide. Only the image tag is used, and
+any image with the tag is hidden (the precise name does not matter).
+layer
+The layer on which this function operates. If None, uses the default
+layer associated with the tag.
+
+
+
+
+renpy.image(name, d) 
+Defines an image. This function is the Python equivalent of the
+image statement.
+
+name
+The name of the image to display, a string.
+d
+The displayable to associate with that image name.
+
+This function may only be run from inside an init block. It is an
+error to run this function once the game has started.
+
+
+
+renpy.scene(layer=u'master') 
+Removes all displayables from layer. This is equivalent to the scene
+statement, when the scene statement is not given an image to show.
+A full scene statement is equivalent to a call to renpy.scene followed by a
+call to renpy.show(). For example:
+scene bg beach
+
+
+is equivalent to:
+$ renpy.scene()
+$ renpy.show("bg beach")
+
+
+
+
+
+renpy.show(name, at_list=[], layer='master', what=None, zorder=0, tag=None, behind=[]) 
+Shows an image on a layer. This is the programmatic equivalent of the show
+statement.
+
+name
+The name of the image to show, a string.
+at_list
+A list of transforms that are applied to the image.
+The equivalent of the at property.
+layer
+A string, giving the name of the layer on which the image will be shown.
+The equivalent of the onlayer property. If None, uses the default
+layer associated with the tag.
+what
+If not None, this is a displayable that will be shown in lieu of
+looking on the image. (This is the equivalent of the show expression
+statement.) When a what parameter is given, name can be used to
+associate a tag with the image.
+zorder
+An integer, the equivalent of the zorder property. If None, the
+zorder is preserved if it exists, and is otherwise set to 0.
+tag
+A string, used to specify the image tag of the shown image. The
+equivalent of the as property.
+behind
+A list of strings, giving image tags that this image is shown behind.
+The equivalent of the behind property.
+
+
+
+
+renpy.show_layer_at(at_list, layer=u'master', reset=True, camera=False) 
+The Python equivalent of the show layer layer at at_list
+statement. If camera is True, the equivalent of the camera statement.
+
+reset
+If true, the transform state is reset to the start when it is shown.
+If false, the transform state is persisted, allowing the new transform
+to update that state.
+
+
+
+
+Transitions 
+The equivalent of the With Statement is the renpy.with_statement()
+function.
+
+
+renpy.with_statement(trans, always=False) 
+Causes a transition to occur. This is the Python equivalent of the
+with statement.
+
+trans
+The transition.
+always
+If True, the transition will always occur, even if the user has
+disabled transitions.
+
+This function returns true if the user chose to interrupt the transition,
+and false otherwise.
+
+
+
+Jump 
+The equivalent of the Jump Statement is the renpy.jump() function.
+
+
+renpy.jump(label) 
+Causes the current statement to end, and control to jump to the given
+label.
+
+
+
+Call 
+The equivalent of the Call Statement is the renpy.call() function.
+
+
+renpy.call(label, *args, from_current=False, **kwargs) 
+Causes the current Ren'Py statement to terminate, and a jump to a
+label to occur. When the jump returns, control will be passed
+to the statement following the current statement.
+
+from_current
+If true, control will return to the current statement, rather than
+the statement following the current statement. (This will lead to
+the current statement being run twice. This must be passed as a
+keyword argument.)
+
+
+
+
+renpy.return_statement(value=None) 
+Causes Ren'Py to return from the current Ren'Py-level call.
+
+
+
+Pause 
+The equivalent of the Pause Statement is the renpy.pause() function.
+
+
+renpy.pause(delay=None, *, hard=False, predict=False, modal=False) 
+Causes Ren'Py to pause. Returns true if the user clicked to end the pause,
+or false if the pause timed out or was skipped.
+
+delay
+If given, the number of seconds Ren'Py should pause for.
+
+The following should be given as keyword arguments:
+
+hard
+This must be given as a keyword argument. When True, Ren'Py may prevent
+the user from clicking to interrupt the pause. If the player enables
+skipping, the hard pause will be skipped. There may be other circumstances
+where the hard pause ends early or prevents Ren'Py from operating properly,
+these will not be treated as bugs.
+In general, using hard pauses is rude. When the user clicks to advance
+the game, it's an explicit request - the user wishes the game to advance.
+To override that request is to assume you understand what the player
+wants more than the player does.
+Calling renpy.pause guarantees that whatever is on the screen will be
+displayed for at least one frame, and hence has been shown to the
+player.
+tl;dr - Don't use renpy.pause with hard=True.
+
+predict
+If True, Ren'Py will end the pause when all prediction, including
+prediction scheduled with renpy.start_predict() and
+renpy.start_predict_screen(), has been finished.
+This also causes Ren'Py to prioritize prediction over display smoothness
+for the duration of the pause. Because of that, it's recommended to not
+display animations during prediction.
+
+modal
+If True or None, the pause will not end when a modal screen is being displayed.
+If false, the pause will end while a modal screen is being displayed.
+
+
+

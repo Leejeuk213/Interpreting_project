@@ -1,0 +1,4446 @@
+
+Screen Actions, Values, and Functions 
+Ren'Py ships with a number of actions, values, and functions intended
+for use with screens and the screen language.
+
+Actions 
+Actions are invoked when a button (including imagebuttons,
+textbuttons, and hotspots) is activated, hovered, or
+unhovered. Actions may determine when a button is selected or
+insensitive.
+Along with these actions, an action may be a function that does not
+take any arguments. The function is called when the action is
+invoked. If the action returns a value, then the value is returned
+from an interaction.
+A list of actions can usually be provided in lieu of a single action,
+in which case the actions in the list are run in order.
+
+Control Actions 
+These are actions that manage screens, interaction results, and control flow.
+
+
+Call(label, *args, **kwargs) 
+Ends the current statement, and calls label, given as a string.
+Arguments and keyword arguments are passed to renpy.call().
+
+
+
+Hide(screen=None, transition=None, _layer=None) 
+This causes a screen to be hidden if it is shown.
+
+screen
+Either a string giving the name of the screen to be hidden, or
+None to hide the current screen.
+transition
+If not None, a transition that occurs when hiding the screen.
+_layer
+This is passed as the layer argument to renpy.hide_screen().
+Ignored if screen is None.
+
+
+
+
+Jump(label) 
+Causes control to transfer to label, given as a string.
+
+
+
+NullAction(*args, **kwargs) 
+Does nothing.
+This can be used to make a button responsive to hover/unhover events,
+without actually doing anything.
+
+
+
+Return(value=None) 
+Causes the current interaction to return the supplied value, which
+must not be None. This is often used with menus and imagemaps, to
+select what the return value of the interaction is. If the screen
+was called using the call screen statement, the return value
+is placed in the _return variable.
+When in a menu, this returns from the menu. (The value should be
+None in this case.)
+
+
+
+Show(screen, transition=None, *args, **kwargs) 
+This causes another screen to be shown. screen is a string
+giving the name of the screen. The arguments are
+passed to the screen being shown.
+If not None, transition is used to show the new screen.
+This action takes the _layer, _zorder and _tag keyword
+arguments, which have the same meaning as in the
+renpy.show_screen() function.
+
+
+
+ShowTransient(screen, transition=None, *args, **kwargs) 
+Shows a transient screen. A transient screen will be hidden when
+the current interaction completes. The arguments are
+passed to the screen being shown.
+If not None, transition is use to show the new screen.
+This action takes the _layer, _zorder and _tag keyword
+arguments, which have the same meaning as in the
+renpy.show_screen() function.
+
+
+
+ToggleScreen(screen, transition=None, *args, **kwargs) 
+This toggles the visibility of screen. If it is not currently
+shown, the screen is shown with the provided arguments. Otherwise,
+the screen is hidden.
+If not None, transition is use to show and hide the screen.
+This action takes the _layer, _zorder and _tag keyword
+arguments, which have the same meaning as in the
+renpy.show_screen() function.
+
+
+
+Data Actions 
+These set or toggle data.
+
+
+AddToSet(set, value) 
+Adds value to set.
+
+set
+The set to add to. This may be a Python set or list, in which
+case the value is appended to the list.
+value
+The value to add or append.
+
+
+
+
+RemoveFromSet(set, value) 
+Removes value from set.
+
+set
+The set to remove from. This may be a set or list.
+value
+The value to remove.
+
+
+
+
+SetDict(dict, key, value) 
+Causes the value of key in dict to be set to value.
+This also works with lists, where key is the index at which
+the value will be set.
+
+
+
+SetField(object, field, value) 
+Causes the a field on an object to be set to a given value.
+object is the object, field is a string giving the name of the
+field to set, and value is the value to set it to.
+
+
+
+SetLocalVariable(name, value) 
+Causes the variable called name to be set to value in the current
+local context.
+This function is only useful in a screen that has been used by
+another screen, as it provides a way of setting the value of a
+variable inside the used screen. In all other cases,
+SetScreenVariable() should be preferred, as it allows more
+of the screen to be cached.
+For more information, see Use.
+This must be created in the context that the variable is set
+in - it can't be passed in from somewhere else.
+
+
+
+SetScreenVariable(name, value) 
+Causes the variable called name associated with the current screen
+to be set to value.
+In a used screen, this action sets the variable in the context
+of the screen containing the used one(s).
+To set variables within a used screen, and only in that
+case, use SetLocalVariable() instead.
+
+
+
+SetVariable(name, value) 
+Causes the variable called name to be set to value.
+The name argument must be a string, and can be a simple name like "strength", or
+one with dots separating the variable from fields, like "hero.strength"
+or "persistent.show_cutscenes".
+
+
+
+ToggleDict(dict, key, true_value=None, false_value=None) 
+Toggles the value of key in dict. It also works on
+lists, in which case key is the index of the value to toggle.
+Toggling means to invert the value when the action is performed.
+
+true_value
+If not None, then this is the true value used.
+false_value
+If not None, then this is the false value used.
+
+
+
+
+ToggleField(object, field, true_value=None, false_value=None) 
+Toggles field on object. Toggling means to invert the boolean
+value of that field when the action is performed.
+
+true_value
+If not None, then this is the true value we use.
+false_value
+If not None, then this is the false value we use.
+
+
+
+
+ToggleLocalVariable(name, true_value=None, false_value=None) 
+Toggles the value of the variable called name in the current local context.
+This function is only useful in a screen that has been used by
+another screen, as it provides a way of setting the value of a
+variable inside the used screen. In all other cases,
+ToggleScreenVariable() should be preferred, as it allows more
+of the screen to be cached.
+For more information, see Use.
+This must be created in the context that the variable is set
+in - it can't be passed in from somewhere else.
+
+true_value
+If not None, then this is the true value used.
+false_value
+If not None, then this is the false value used.
+
+
+
+
+ToggleScreenVariable(name, true_value=None, false_value=None) 
+Toggles the value of the variable called name in the current screen.
+In a used screen, this action accesses and sets the given variable
+in the context of the screen containing the used one(s).
+To access and set variables within a used screen, and only in that
+case, use ToggleLocalVariable() instead.
+
+true_value
+If not None, then this is the true value used.
+false_value
+If not None, then this is the false value used.
+
+
+
+
+ToggleSetMembership(set, value) 
+Toggles the membership of value in set. If the value is not
+in the set, it's added. Otherwise, it is removed.
+Buttons with this action are marked as selected if and only if the
+value is in the set.
+
+set
+The set to add to or remove from. This may be a set or list. In the
+case of a list, new items are appended.
+value
+The value to add or append.
+
+
+
+
+ToggleVariable(variable, true_value=None, false_value=None) 
+Toggles the variable whose name is given in variable.
+The variable argument must be a string, and can be a simple name like "strength", or
+one with dots separating the variable from fields, like "hero.strength"
+or "persistent.show_cutscenes".
+
+true_value
+If not None, then this is the true value used.
+false_value
+If not None, then this is the false value used.
+
+
+
+
+Menu Actions 
+These actions invoke menus, or are primarily useful while in the main
+or game menus.
+
+
+MainMenu(confirm=True, save=True) 
+Causes Ren'Py to return to the main menu.
+
+confirm
+If true, causes Ren'Py to ask the user if he wishes to
+return to the main menu, rather than returning
+directly.
+save
+If true, the game is saved in _quit_slot before Ren'Py
+restarts and returns the user to the main menu. The game is not
+saved if _quit_slot is None.
+
+
+
+
+Quit(confirm=None) 
+Quits the game.
+
+confirm
+If true, prompts the user if he wants to quit, rather
+than quitting directly. If None, asks if and only if
+the user is not at the main menu.
+
+
+
+
+ShowMenu(screen=None, *args, **kwargs) 
+Causes us to enter the game menu, if we're not there already. If we
+are in the game menu, then this shows a screen or jumps to a label.
+screen is usually the name of a screen, which is shown using
+the screen mechanism. If the screen doesn't exist, then "_screen"
+is appended to it, and that label is jumped to.
+If the optional keyword argument _transition is given, the
+menu will change screens using the provided transition.
+If not manually specified, the default transition is
+config.intra_transition.
+
+ShowMenu("load")
+ShowMenu("save")
+ShowMenu("preferences")
+
+This can also be used to show user-defined menu screens. For
+example, if one has a "stats" screen defined, one can
+show it as part of the game menu using:
+
+ShowMenu("stats")
+
+ShowMenu without an argument will enter the game menu at the
+default screen, taken from _game_menu_screen.
+Extra arguments and keyword arguments are passed on to the screen
+
+
+
+Start(label=u'start') 
+Causes Ren'Py to jump out of the menu context to the named
+label. The main use of this is to start a new game from the
+main menu. Common uses are:
+
+Start() - Start at the start label.
+Start("foo") - Start at the "foo" label.
+
+
+
+
+File Actions 
+These actions handle saving, loading, and deleting of files. Many of these
+take the name and page arguments.
+
+name
+The name of the file to save to. This can be a string or an integer. It's
+combined with the page to create the filename.
+page
+The page that this action acts on. This is one of "auto",
+"quick", or a positive integer. If None, the page is determined
+automatically, based on a persistent page number.
+
+
+
+FileAction(name, page=None, **kwargs) 
+"Does the right thing" with the file. This means loading it if the
+load screen is showing (current screen is named "load"), and saving
+otherwise.
+
+name
+The name of the slot to save to or load from. If None, an unused slot
+(a large number based on the current time) will be used.
+page
+The page that the file will be saved to or loaded from. If None, the
+current page is used.
+
+Other keyword arguments are passed to FileLoad or FileSave.
+
+
+
+FileDelete(name, confirm=True, page=None, slot=False) 
+Deletes the file.
+
+name
+The name of the slot to delete.
+confirm
+If true and not at the main menu, prompt for confirmation before loading the file.
+page
+The page that the file will be loaded from. If None, the
+current page is used.
+slot
+If True, name is taken to be a slot name, and page is ignored.
+
+
+
+
+FileLoad(name, confirm=True, page=None, newest=True, cycle=False, slot=False) 
+Loads the file.
+
+name
+The name of the slot to load from. If None, an unused slot will be
+used, and hence the file will not be loadable.
+confirm
+If true and not at the main menu, prompt for confirmation before loading the file.
+page
+The page that the file will be loaded from. If None, the
+current page is used.
+newest
+If true, the button is selected if this is the newest file.
+cycle
+Ignored.
+slot
+If True, name is taken to be a slot name, and page is ignored.
+
+
+
+
+FilePage(page) 
+Sets the file page to page, which should be one of "auto", "quick",
+or an integer.
+
+
+
+FilePageNext(max=None, wrap=False, auto=True, quick=True) 
+Goes to the next file page.
+
+max
+If set, this should be an integer that gives the number of
+the maximum file page we can go to.
+wrap
+If true, we can go to the first page when on the
+last file page if max is set.
+auto
+If true and wrap is set, this can bring the player to
+the page of automatic saves.
+quick
+If true and wrap is set, this can bring the player to
+the page of automatic saves.
+
+
+
+
+FilePagePrevious(max=None, wrap=False, auto=True, quick=True) 
+Goes to the previous file page, if possible.
+
+max
+If set, this should be an integer that gives the number of
+the maximum file page we can go to. This is required to enable
+wrap.
+wrap
+If true, we can go to the last page when on the first file page if max is set.
+auto
+If true, this can bring the player to
+the page of automatic saves.
+quick
+If true, this can bring the player to
+the page of automatic saves.
+
+
+
+
+FileSave(name, confirm=True, newest=True, page=None, cycle=False, slot=False) 
+Saves the file.
+The button with this slot is selected if it's marked as the
+newest save file.
+
+name
+The name of the slot to save to. If None, an unused slot
+(a large number based on the current time) will be used.
+confirm
+If true, then we will prompt before overwriting a file.
+newest
+Ignored.
+page
+The name of the page that the slot is on. If None, the current
+page is used.
+cycle
+If true, then saves on the supplied page will be cycled before
+being shown to the user. config.quicksave_slots slots are
+used in the cycle.
+slot
+If True, name is taken to be a slot name, and page is ignored.
+
+
+
+
+FileTakeScreenshot(*args, **kwargs) 
+Take a screenshot to be used when the game is saved. This can
+be used to ensure that the screenshot is accurate, by taking
+a picture of the screen before a file save screen is shown.
+
+
+
+QuickLoad(confirm=True) 
+Performs a quick load.
+
+confirm
+If true and not at the main menu, prompt for confirmation before loading the file.
+
+
+
+
+QuickSave(message=u'Quick save complete.', newest=False) 
+Performs a quick save.
+
+message
+A message to display to the user when the quick save finishes.
+newest
+Set to true to mark the quicksave as the newest save.
+
+
+
+
+Audio Actions 
+The concept of channels and how they work, as well as most information
+about audio in Ren'Py, is explained at Audio.
+
+
+PauseAudio(channel, value=True) 
+Sets the pause flag for channel.
+If value is True, the channel is paused. If False, the channel is
+unpaused. If "toggle", the pause flag will be toggled.
+
+
+
+Play(channel, file, selected=None, **kwargs) 
+Causes an audio file to be played on a given channel.
+
+channel
+The channel to play the sound on.
+file
+The file to play.
+selected
+If True, buttons using this action will be marked as selected
+if the file is playing on the channel. If False, this action
+will not cause the button to start playing. If None, the button
+is marked selected if the channel is a music channel, and not
+otherwise.
+
+Any other keyword arguments are passed to renpy.music.play().
+
+
+
+Queue(channel, file, **kwargs) 
+Causes an audio file to be queued on a given channel.
+
+channel
+The channel to play the sound on.
+file
+The file to play.
+
+Any keyword arguments are passed to renpy.music.queue()
+
+
+
+SetMixer(mixer, volume) 
+Sets the volume of mixer to value.
+
+mixer
+The mixer to set the volume of. A string, usually one of
+"main", "music", "sfx", or "voice". See Volume for
+more information about mixers.
+value
+The value to set the volume to. A number between 0.0 and 1.0,
+inclusive.
+
+
+
+
+SetMute(mixer, mute) 
+Sets the mute status of one or more mixers. When a mixer is muted,
+audio channels associated with that mixer will stop playing audio.
+
+mixer
+Either a single string giving a mixer name, or a list of strings
+giving a list of mixers. The strings should be mixer names.
+mute
+True to mute the mixer, False to ummute it.
+
+
+
+
+Stop(channel, **kwargs) 
+Causes an audio channel to be stopped.
+
+channel
+The channel to stop the sound on.
+
+Any keyword arguments are passed to renpy.music.stop()
+
+
+
+ToggleMute(mixer) 
+Toggles the mute status of one or more mixers.
+
+mixer
+Either a single string giving a mixer name, or a list of strings
+giving a list of mixers. The strings should be mixer names.
+
+
+
+
+Focus Actions 
+
+
+CaptureFocus(name=u'default') 
+If a displayable is focused when this action is run, the rectangle
+containing that displayable is stored with the name name. This
+rectangle can then be retrieved with the GetFocusRect() action,
+or the focus property of the Nearrect displayable.
+If no displayable is focused, the previous capture with that name
+is removed.
+
+name
+The name of the focus rectangle to store. This should be a string.
+The name "tooltip" is special, as it is automatically captured
+when the tooltip is changed.
+
+
+
+
+ClearFocus(name=u'default') 
+Clears a stored focus rectangle captured with CaptureFocus().
+
+
+
+GetFocusRect(name=u'default') 
+If a focus rectangle with the given name has been stored (either with
+CaptureFocus(), or automatically by a tooltip, returns the
+a (x, y, h, w) rectangle. Otherwise, returns None.
+
+name
+The name of the focus rectangle to retrieve. The name "tooltip"
+is special, as it is automatically captured when the tooltip is
+changed.
+
+
+
+
+ToggleFocus(name=u'default') 
+If the focus rectangle exists, clears it, otherwise captures it.
+
+name
+The name of the focus rectangle to store. This should be a string.
+The name "tooltip" is special, as it is automatically captured
+when the tooltip is changed.
+
+
+
+
+Other Actions 
+These are other actions, not found anywhere else.
+
+
+Confirm(prompt, yes, no=None, confirm_selected=False) 
+Prompts the user for confirmation of an action. If the user
+clicks yes, the yes action is performed. Otherwise, the no
+action is performed.
+
+prompt
+The prompt to display to the user.
+confirm_selected
+If true, the prompt will be displayed even if the yes action
+is already selected. If false (the default), the prompt
+will not be displayed if the yes action is selected.
+
+The sensitivity and selectedness of this action match those
+of the yes action.
+
+
+
+DisableAllInputValues() 
+Disables all active InputValue. This will re-focus the default
+InputValue, if there is one. Otherwise, no InputValue will be
+focused.
+
+
+
+Function(callable, *args, **kwargs) 
+This Action calls callable with args and kwargs.
+
+callable
+Callable object. This assumes that if two callables compare
+equal, calling either one will be equivalent.
+args
+position arguments to be passed to callable.
+kwargs
+keyword arguments to be passed to callable.
+
+This Action takes an optional _update_screens keyword argument, which
+defaults to true. When it is true, the interaction restarts and
+the screens are updated after the function returns.
+If the function returns a non-None value, the interaction stops and
+returns that value. (When called using the call screen statement, the
+result is placed in the _return variable.)
+Instead of using a Function action, you can define your own subclass
+of the Action class. This lets you name the action, and
+determine when it should be selected and sensitive.
+
+
+
+Help(help=None) 
+Displays help.
+If a screen named help is defined, that screen is displayed
+using ShowMenu() and help is ignored.
+
+help
+A string that is used to find help. This is used in the
+following way:
+
+If a label with this name exists, the label is called in
+a new context.
+Otherwise, this is interpreted as giving the name of a file
+that should be opened in a web browser.
+
+If help is None, config.help is used as the default
+value.
+
+
+
+
+
+HideInterface(*args, **kwargs) 
+Causes the interface to be hidden until the user clicks.
+This is typically what happens when hitting the H key in a Ren'Py game.
+
+
+
+If(expression, true=None, false=None) 
+This returns true if expression is true, and false
+otherwise. Use this to select an action based on an expression.
+Note that the default, None, can be used as an action that causes
+a button to be disabled.
+
+
+
+InvertSelected(action) 
+This inverts the selection state of the provided action, while
+proxying over all of the other methods.
+
+
+
+MouseMove(x, y, duration=0) 
+Move the mouse pointer to x, y. If the device does not have a mouse
+pointer or _preferences.mouse_move is False, this does nothing.
+
+duration
+The time it will take to perform the move, in seconds. During
+this time, the mouse may be unresponsive.
+
+
+
+
+Notify(message) 
+Displays message using renpy.notify().
+
+
+
+OpenDirectory(directory) 
+Opens directory in a file browser. directory is relative to
+the config.basedir.
+
+
+
+OpenURL(url) 
+Causes url to be opened in a web browser.
+
+
+
+QueueEvent(event, up=False) 
+Queues the given event using renpy.queue_event().
+
+
+
+RestartStatement(*args, **kwargs) 
+This action causes Ren'Py to rollback to before the current
+statement, and then re-run the current statement. This may be used
+when changing a persistent variable that affects how the statement
+is displayed.
+If run in a menu context, this waits until the player exits to a
+top-level context before performing the rollback.
+
+
+
+RollForward(*args, **kwargs) 
+This action causes a rollforward to occur, if a roll forward is
+possible. Otherwise, it is insensitive.
+
+
+
+Rollback(*args, force="menu", **kwargs) 
+This action causes a rollback to occur, when a rollback is possible.
+Otherwise, nothing happens.
+The arguments are given to renpy.rollback(). This includes the
+force argument which here defaults to "menu".
+
+
+
+RollbackToIdentifier(identifier) 
+This causes a rollback to an identifier to occur. Rollback
+identifiers are returned as part of HistoryEntry objects.
+
+
+
+Screenshot(*args, **kwargs) 
+Takes a screenshot.
+
+
+
+Scroll(id, direction, amount=u'step') 
+Causes a Bar, Viewport, or Vpgrid to scroll.
+
+id
+The id of a bar, viewport, or vpgrid in the current screen.
+direction
+For a vbar, one of "increase" or "decrease". For a viewport
+or vpgrid, one of "horizontal increase", "vertical increase",
+"horizontal decrease", or "vertical decrease".
+amount
+The amount to scroll by. This can be a number of pixels, or
+else "step" or "page".
+
+
+
+
+SelectedIf(expression) 
+This indicates that one action in a list of actions should be used
+to determine if a button is selected. This only makes sense
+when the button has a list of actions. For example:
+# The button is selected only if mars_flag is True
+textbutton "Marsopolis":
+    action [ SelectedIf(SetVariable("mars_flag", True)), SetVariable("on_mars", True) ]
+
+
+The action inside SelectedIf is run normally when the button is clicked.
+
+
+
+SensitiveIf(expression) 
+This indicates that one action in a list of actions should be used
+to determine if a button is sensitive. This only makes sense
+when the button has a list of actions. For example:
+# The button is sensitive only if mars_flag is True
+textbutton "Marsopolis":
+    action [ SensitiveIf(SetVariable("mars_flag", True)), SetVariable("on_mars", True) ]
+
+
+The action inside SensitiveIf is run normally when the button is clicked.
+
+
+
+Skip(fast=False, confirm=False) 
+Causes the game to begin skipping. If the game is in a menu
+context, then this returns to the game. Otherwise, it just
+enables skipping.
+
+fast
+If true, skips directly to the next menu choice.
+confirm
+If true, asks for confirmation before beginning skipping.
+
+
+
+
+With(transition) 
+Causes transition to occur.
+
+Additional actions are available in other pages of this documentation, such
+as Language, Replay and EndReplay,
+gui.SetPreference and gui.TogglePreference,
+StylePreference, and the voice actions.
+Other actions can be created using the Action class.
+
+
+
+Bar Values 
+Bar values are used with bars, to set the bar value, and to allow the bar
+to adjust an underlying property. To create a new bar value, subclass
+the BarValue class. All classes that have the step keyword also accept
+the force_step keyword whose behavior is described in ui.adjustment().
+
+
+AnimatedValue(value=0.0, range=1.0, delay=1.0, old_value=None) 
+This animates a value, taking delay seconds to vary the value from
+old_value to value.
+
+value
+The value itself, a number.
+range
+The range of the value, a number.
+delay
+The time it takes to animate the value, in seconds. Defaults
+to 1.0.
+old_value
+The old value. If this is None, then the value is taken from the
+AnimatedValue we replaced, if any. Otherwise, it is initialized
+to value.
+
+
+
+
+AudioPositionValue(channel=u'music', update_interval=0.1) 
+A value that shows the playback position of the audio file playing
+in channel.
+
+update_interval
+How often the value updates, in seconds.
+
+
+
+
+DictValue(dict, key, range, max_is_zero=False, style=u'bar', offset=0, step=None, action=None, force_step=False) 
+A value that allows the user to adjust the value of a key
+in a dict.
+
+dict
+The dict.
+key
+The key.
+range
+The range to adjust over.
+max_is_zero
+If True, then when the value of a key is zero, the value of the
+bar will be range, and all other values will be shifted down by 1.
+This works both ways - when the bar is set to the maximum, the
+value of a key is set to 0.
+style
+The styles of the bar created.
+offset
+An offset to add to the value.
+step
+The amount to change the bar by. If None, defaults to 1/10th of
+the bar.
+action
+If not None, an action to call when the field has changed.
+
+
+
+
+FieldValue(object, field, range, max_is_zero=False, style=u'bar', offset=0, step=None, action=None, force_step=False) 
+A bar value that allows the user to adjust the value of a field
+on an object.
+
+object
+The object.
+field
+The field, a string.
+range
+The range to adjust over.
+max_is_zero
+If True, then when the field is zero, the value of the
+bar will be range, and all other values will be shifted
+down by 1. This works both ways - when the bar is set to
+the maximum, the field is set to 0.
+This is used internally, for some preferences.
+
+style
+The styles of the bar created.
+offset
+An offset to add to the value.
+step
+The amount to change the bar by. If None, defaults to 1/10th of
+the bar.
+action
+If not None, an action to call when the field has changed.
+
+
+
+
+MixerValue(mixer) 
+The value of an audio mixer.
+
+mixer
+The name of the mixer to adjust. This is usually one of
+"main", "music", "sfx", or "voice". See Volume
+for more information.
+
+
+
+
+ScreenVariableValue(variable, range, max_is_zero=False, style=u'bar', offset=0, step=None, action=None, force_step=False) 
+A bar value that adjusts the value of a variable in a screen.
+
+variable
+A string giving the name of the variable to adjust.
+range
+The range to adjust over.
+max_is_zero
+If True, then when the field is zero, the value of the
+bar will be range, and all other values will be shifted
+down by 1. This works both ways - when the bar is set to
+the maximum, the field is set to 0.
+This is used internally, for some preferences.
+
+style
+The styles of the bar created.
+offset
+An offset to add to the value.
+step
+The amount to change the bar by. If None, defaults to 1/10th of
+the bar.
+action
+If not None, an action to call when the field has changed.
+
+
+
+
+StaticValue(value=0.0, range=1.0) 
+This allows a value to be specified statically.
+
+value
+The value itself, a number.
+range
+The range of the value.
+
+
+
+
+VariableValue(variable, range, max_is_zero=False, style=u'bar', offset=0, step=None, action=None, force_step=False) 
+A bar value that allows the user to adjust the value of a variable
+in the default store.
+
+variable
+A string giving the name of the variable to adjust.
+range
+The range to adjust over.
+max_is_zero
+If True, then when the field is zero, the value of the
+bar will be range, and all other values will be shifted
+down by 1. This works both ways - when the bar is set to
+the maximum, the field is set to 0.
+This is used internally, for some preferences.
+
+style
+The styles of the bar created.
+offset
+An offset to add to the value.
+step
+The amount to change the bar by. If None, defaults to 1/10th of
+the bar.
+action
+If not None, an action to call when the field has changed.
+
+
+
+
+XScrollValue(viewport) 
+The value of an adjustment that horizontally scrolls the viewport with the
+given id, on the current screen. The viewport must be defined before a bar
+with this value is.
+
+
+
+YScrollValue(viewport) 
+The value of an adjustment that vertically scrolls the viewport with the
+given id, on the current screen. The viewport must be defined before a bar
+with this value is.
+
+
+
+Input Values 
+Input values are used with text inputs, to set the default text, to accept
+changed text, to respond to the enter key, and to determine if the text is
+editable by default. To create a new input value, subclass the InputValue
+class.
+Ren'Py-defined input values inherit from InputValue, which means that
+all values also include Enable(), Disable(), and Toggle() methods that return
+actions that enable, disable, and toggle editing, respectively. See also
+the DisableAllInputValues() action.
+
+
+DictInputValue(dict, key, default=True, returnable=False) 
+An input value that updates key in dict.
+
+default
+If true, this input can be editable by default.
+returnable
+If true, the value of this input will be returned when the
+user presses enter.
+
+
+
+
+FieldInputValue(object, field, default=True, returnable=False) 
+An input value that updates field on object.
+
+field
+A string giving the name of the field.
+default
+If true, this input can be editable by default.
+returnable
+If true, the value of this input will be returned when the
+user presses enter.
+
+
+
+
+FilePageNameInputValue(pattern=u'Page {}', auto=u'Automatic saves', quick=u'Quick saves', page=None, default=False) 
+An input value that updates the name of a file page.
+
+pattern
+This is used for the default name of a page. Python-style substition
+is performed, such that {} is replaced with the number of the page.
+auto
+The name of the autosave page.
+quick
+The name of the quicksave page.
+page
+If given, the number of the page to display. This should usually
+be left as None, to give the current page.
+default
+If true, this input can be editable by default.
+
+
+
+
+ScreenVariableInputValue(variable, default=True, returnable=False) 
+An input value that updates variable.
+
+variable
+A string giving the name of the variable to update.
+default
+If true, this input can be editable by default.
+returnable
+If true, the value of this input will be returned when the
+user presses enter.
+
+
+
+
+VariableInputValue(variable, default=True, returnable=False) 
+An input value that updates variable.
+
+variable
+A string giving the name of the variable to update.
+default
+If true, this input can be editable by default.
+returnable
+If true, the value of this input will be returned when the
+user presses enter.
+
+
+
+
+Functions and Classes 
+These functions and classes are useful in association with screens.
+
+Preferences 
+While all preferences can be defined based on the Actions and Values
+given above, it requires some knowledge of Ren'Py to figure out the
+correct one to use. The preferences constructor makes this easy,
+by creation an action or value, as appropriate, based on the
+names used in the default preferences screen.
+
+
+Preference(name, value=None, range=None) 
+This constructs the appropriate action or value from a preference.
+The preference name should be the name given in the standard
+menus, while the value should be either the name of a choice,
+"toggle" to cycle through choices, a specific value, or left off
+in the case of buttons.
+Actions that can be used with buttons and hotspots are:
+
+Preference("display", "fullscreen") - displays in fullscreen mode.
+Preference("display", "window") - displays in windowed mode at 1x normal size.
+Preference("display", 2.0) - displays in windowed mode at 2.0x normal size.
+Preference("display", "any window") - displays in windowed mode at the previous size.
+Preference("display", "toggle") - toggle display mode.
+Preference("transitions", "all") - show all transitions.
+Preference("transitions", "none") - do not show transitions.
+Preference("transitions", "toggle") - toggle transitions.
+Preference("video sprites", "show") - show all video sprites.
+Preference("video sprites", "hide") - fall back to images where possible.
+Preference("video sprites", "toggle") - toggle image fallback behavior.
+Preference("show empty window", "show") - Allow the "window show" and "window auto" statement to show an empty window outside of the say statement.
+Preference("show empty window", "hide") - Prevent the above.
+Preference("show empty window", "toggle") - Toggle the above.
+Preference("text speed", 0) - make text appear instantaneously.
+Preference("text speed", 142) - set text speed to 142 characters per second.
+Preference("joystick") - Show the joystick preferences.
+Preference("skip", "seen") - Only skip seen messages.
+Preference("skip", "all") - Skip unseen messages.
+Preference("skip", "toggle") - Toggle between skip seen and skip all.
+Preference("begin skipping") - Starts skipping.
+Preference("after choices", "skip") - Skip after choices.
+Preference("after choices", "stop") - Stop skipping after choices.
+Preference("after choices", "toggle") - Toggle skipping after choices.
+Preference("auto-forward time", 0) - Set the auto-forward time to infinite.
+Preference("auto-forward time", 10) - Set the auto-forward time (unit is seconds per 250 characters).
+Preference("auto-forward", "enable") - Enable auto-forward mode.
+Preference("auto-forward", "disable") - Disable auto-forward mode.
+Preference("auto-forward", "toggle") - Toggle auto-forward mode.
+Preference("auto-forward after click", "enable") - Remain in auto-forward mode after a click.
+Preference("auto-forward after click", "disable") - Disable auto-forward mode after a click.
+Preference("auto-forward after click", "toggle") - Toggle auto-forward after click.
+Preference("automatic move", "enable") - Enable automatic mouse mode.
+Preference("automatic move", "disable") - Disable automatic mouse mode.
+Preference("automatic move", "toggle") - Toggle automatic mouse mode.
+Preference("wait for voice", "enable")  - Wait for the currently playing voice to complete before auto-forwarding.
+Preference("wait for voice", "disable") - Do not wait for the currently playing voice to complete before auto-forwarding.
+Preference("wait for voice", "toggle")  - Toggle wait voice.
+Preference("voice sustain", "enable")  - Sustain voice past the current interaction.
+Preference("voice sustain", "disable") - Don't sustain voice past the current interaction.
+Preference("voice sustain", "toggle")  - Toggle voice sustain.
+Preference("music mute", "enable") - Mute the music mixer.
+Preference("music mute", "disable") - Un-mute the music mixer.
+Preference("music mute", "toggle") - Toggle music mute.
+Preference("sound mute", "enable") - Mute the sound mixer.
+Preference("sound mute", "disable") - Un-mute the sound mixer.
+Preference("sound mute", "toggle") - Toggle sound mute.
+Preference("voice mute", "enable") - Mute the voice mixer.
+Preference("voice mute", "disable") - Un-mute the voice mixer.
+Preference("voice mute", "toggle") - Toggle voice mute.
+Preference("mixer <mixer> mute", "enable") - Mute the specified mixer.
+Preference("mixer <mixer> mute", "disable") - Unmute the specified mixer.
+Preference("mixer <mixer> mute", "toggle") - Toggle mute of the specified mixer.
+Preference("all mute", "enable") - Mute each individual mixer.
+Preference("all mute", "disable") - Unmute each individual mixer.
+Preference("all mute", "toggle") - Toggle mute of each individual mixer.
+Preference("main volume", 0.5) - Set the adjustment applied to all channels.
+Preference("music volume", 0.5) - Set the music volume.
+Preference("sound volume", 0.5) - Set the sound volume.
+Preference("voice volume", 0.5) - Set the voice volume.
+Preference("mixer <mixer> volume", 0.5) - Set the specified mixer volume.
+Preference("emphasize audio", "enable") - Emphasize the audio channels found in config.emphasize_audio_channels.
+Preference("emphasize audio", "disable") - Do not emphasize audio channels.
+Preference("emphasize audio", "toggle") - Toggle emphasize audio.
+Preference("self voicing", "enable") - Enables self-voicing.
+Preference("self voicing", "disable") - Disable self-voicing.
+Preference("self voicing", "toggle") - Toggles self-voicing.
+Preference("self voicing volume drop", 0.5) - Drops the volume of non-voice mixers when self voicing is active.
+Preference("clipboard voicing", "enable") - Enables clipboard-voicing.
+Preference("clipboard voicing", "disable") - Disable clipboard-voicing.
+Preference("clipboard voicing", "toggle") - Toggles clipboard-voicing.
+Preference("debug voicing", "enable") - Enables self-voicing debug
+Preference("debug voicing", "disable") - Disable self-voicing debug.
+Preference("debug voicing", "toggle") - Toggles self-voicing debug.
+Preference("rollback side", "left") - Touching the left side of the screen causes rollback.
+Preference("rollback side", "right") - Touching the right side of the screen causes rollback.
+Preference("rollback side", "disable") - Touching the screen will not cause rollback.
+Preference("gl powersave", True) - Drop framerate to allow for power savings.
+Preference("gl powersave", False) - Do not drop framerate to allow for power savings.
+Preference("gl powersave", "auto") - Enable powersave when running on battery.
+Preference("gl framerate", None) - Runs at the display framerate.
+Preference("gl framerate", 60) - Runs at the given framerate.
+Preference("gl tearing", True) - Tears rather than skipping frames.
+Preference("gl tearing", False) - Skips frames rather than tearing.
+Preference("font transform", "opendyslexic") - Sets the accessibility font transform to opendyslexic.
+Preference("font transform", "dejavusans") - Sets the accessibility font transform to deja vu sans.
+Preference("font transform", None) - Disables the accessibility font transform.
+Preference("font size", 1.0) - Sets the accessibility font size scaling factor.
+Preference("font line spacing", 1.0) - Sets the accessibility font vertical spacing scaling factor.
+Preference("system cursor", "enable") - Use system cursor ignoring config.mouse.
+Preference("system cursor", "disable") - Use cursor defined in config.mouse.
+Preference("system cursor", "toggle") - Toggle system cursor.
+Preference("high contrast text", "enable") - Enables white text on a black background.
+Preference("high contrast text", "disable") - Disables high contrast text.
+Preference("high contrast text", "toggle") - Toggles high contrast text.
+Preference("audio when minimized", "enable") - Enable sounds playing when the window is not in focus.
+Preference("audio when minimized", "disable") - Disable sounds playing when the window is not in focus.
+Preference("audio when minimized", "toggle") - Toggle sounds playing when the window is not in focus.
+
+Values that can be used with bars are:
+
+Preference("text speed")
+Preference("auto-forward time")
+Preference("main volume")
+Preference("music volume")
+Preference("sound volume")
+Preference("voice volume")
+Preference("mixer <mixer> volume")
+Preference("self voicing volume drop")
+Preference("font size")
+Preference("font line spacing")
+
+The range parameter can be given to give the range of certain bars.
+For "text speed", it defaults to 200 cps. For "auto-forward time", it
+defaults to 30.0 seconds per chunk of text. (These are maximums, not
+defaults.)
+Actions that can be used with buttons are:
+
+Preference("renderer menu") - Show the renderer menu.
+Preference("accessibility menu") - Show the accessibility menu.
+
+These screens are intended for internal use, and are not customizable.
+
+
+
+GetCharacterVolume(voice_tag) 
+This returns the volume associated with voice tag, a number
+between 0.0 and 1.0, which is interpreted as a fraction of the
+mixer volume for the voice channel.
+
+
+
+Gamepad 
+These functions and actions work with the gamepad.
+
+
+GamepadCalibrate() 
+An action that invokes the gamepad calibration routine.
+
+
+
+GamepadExists(developer=True) 
+A function that returns true if a gamepad is present, and false otherwise.
+
+developer
+Forces this function to always return true while config.developer
+is true.
+
+
+
+
+File Functions 
+These functions return useful information about files. They use the
+same default page as the file actions.
+
+
+FileCurrentPage() 
+Returns the current file page as a string.
+
+
+
+FileCurrentScreenshot(empty=None, **properties) 
+A displayable that shows the screenshot that will be saved with the current
+file, if a screenshot has been taken when entering a menu or with
+FileTakeScreenshot().
+If there is no current screenshot, empty is shown in its place. (If empty is
+None, it defaults to Null().)
+
+
+
+FileJson(name, key=None, empty=None, missing=None, page=None, slot=False) 
+Accesses the Json information associated with name.
+This always returns empty if the slot is empty.
+If not, and if key is None, returns the entire dictionary containing the Json data.
+Otherwise, this returns json[key] if key is defined on the json object of the save,
+and missing if there is a save with the given name, but it does not contain key.
+Such Json data is added to a save slot by callbacks registered using
+config.save_json_callbacks.
+
+
+
+FileLoadable(name, page=None, slot=False) 
+This is a function that returns true
+if the file is loadable, and false otherwise.
+
+
+
+FileNewest(name, page=None, slot=False) 
+Returns True if this is the newest file slot, or False otherwise.
+
+
+
+FilePageName(auto=u'a', quick=u'q') 
+Returns the name of the current file page, as a string. If a normal
+page, this returns the page number. Otherwise, it returns
+auto or quick.
+
+
+
+FileSaveName(name, empty=u'', page=None, slot=False) 
+Return the save_name that was in effect when the file was saved,
+or empty if the file does not exist.
+
+
+
+FileScreenshot(name, empty=None, page=None, slot=False) 
+Returns the screenshot associated with the given file. If the
+file is not loadable, then empty is returned, unless it's None,
+in which case, a Null displayable is created.
+The return value is a displayable.
+
+
+
+FileSlotName(slot, slots_per_page, auto=u'a', quick=u'q', format=u'%s%d') 
+Returns the name of the numbered slot. This assumes that slots on
+normal pages are numbered in a linear order starting with 1, and
+that page numbers start with 1. When slot is 2, and slots_per_page
+is 10, and the other variables are the defaults:
+
+When the first page is showing, this returns "2".
+When the second page is showing, this returns "12".
+When the auto page is showing, this returns "a2".
+When the quicksave page is showing, this returns "q2".
+
+
+slot
+The number of the slot to access.
+slots_per_page
+The number of slots per page.
+auto
+A prefix to use for the auto page.
+quick
+A prefix to use for the quick page.
+format
+The formatting code to use. This is given two arguments: A string
+giving the page prefix, and an integer giving the slot number.
+
+
+
+
+FileTime(name, format=u'%b %d, %H:%M', empty=u'', page=None, slot=False) 
+Returns the time the file was saved, formatted according
+to the supplied format. If the file is not found, empty is
+returned.
+The return value is a string.
+
+
+
+FileUsedSlots(page=None, highest_first=True) 
+Returns a list of used numeric file slots on the page.
+
+page
+The name of the page that will be scanned. If None, the current page
+is used.
+highest_first
+If true, the highest-numbered file slot is listed first.
+Otherwise, the lowest-numbered slot is listed first.
+
+
+
+
+Side Image Functions 
+This function returns the side image to use.
+
+
+SideImage() 
+Returns the side image associated with the currently speaking character,
+or a Null displayable if no such side image exists.
+
+
+
+Tooltips 
+Tooltips can now be accessed by the tooltip property available on all
+displayables, and the GetTooltip function. The GetTooltip function
+returns the value of the tooltip property when the displayable
+gains focus.
+Here's an example:
+screen tooltip_example():
+    vbox:
+        textbutton "North":
+            action Return("n")
+            tooltip "To meet a polar bear."
+
+        textbutton "South":
+            action Return("s")
+            tooltip "All the way to the tropics."
+
+        textbutton "East":
+            action Return("e")
+            tooltip "So we can embrace the dawn."
+
+        textbutton "West":
+            action Return("w")
+            tooltip "Where to go to see the best sunsets."
+
+        $ tooltip = GetTooltip()
+
+        if tooltip:
+            text "[tooltip]"
+
+
+The Nearrect displayable can be used to display "popup-style" tooltips,
+and has support for a special "tooltip" focus name, that is set to the location
+of the last focus that set a tooltip:
+screen tooltip_example2():
+    frame:
+
+        padding (20, 20)
+        align (.5, .3)
+
+        has vbox
+
+        textbutton "North":
+            action Return("n")
+            tooltip "To meet a polar bear."
+
+        textbutton "South":
+            action Return("s")
+            tooltip "All the way to the tropics."
+
+        textbutton "East":
+            action Return("e")
+            tooltip "So we can embrace the dawn."
+
+        textbutton "West":
+            action Return("w")
+            tooltip "Where to go to see the best sunsets."
+
+    # This has to be the last thing shown in the screen.
+
+    $ tooltip = GetTooltip()
+
+    if tooltip:
+
+        nearrect:
+            focus "tooltip"
+            prefer_top True
+
+            frame:
+                xalign 0.5
+                text tooltip
+
+
+
+
+GetTooltip(screen=None, last=False) 
+Returns the tooltip of the currently focused displayable, or None
+if no displayable is focused.
+
+screen
+If not None, this should be the name or tag of a screen. If
+given, this function only returns the tooltip if the focused
+displayable is part of the screen.
+last
+If true, returns the last non-None value this function would
+have returned.
+
+
+
+Legacy 
+
+Warning
+This has been obsoleted by the above, but you might see it in older projects.
+
+The tooltip class changes the screen when a button is hovered.
+
+
+class Tooltip(default) 
+A tooltip object can be used to define a portion of a screen that is
+updated when the mouse hovers an area.
+A tooltip object has a value field, which is set to the default
+value passed to the constructor when the tooltip is created. When
+a button using an action created by the tooltip is hovered, the
+value field changes to the value associated with the action.
+
+
+Action(value) 
+Returns an action that is generally used as the hovered property
+of a button. When the button is hovered, the value field of this
+tooltip is set to value. When the button loses focus, the
+value field of this tooltip reverts to the default.
+
+
+When using a tooltip with a screen, the usual behavior is to create a
+tooltip object in a default statement. The value of the tooltip and
+the action method can then be used within the screen. The order of
+use within a screen doesn't matter â it's possible to use the value
+before an action is used.
+Tooltips can take on any value. While in the example below we use the
+text statement to display a string on the screen, it's also possible
+to use the add statement to add a displayable. More complex behavior
+is also possible.
+screen tooltip_test:
+
+    default tt = Tooltip("No button selected.")
+
+    frame:
+        xfill True
+
+        has vbox
+
+        textbutton "One.":
+            action Return(1)
+            hovered tt.Action("The loneliest number.")
+
+        textbutton "Two.":
+            action Return(2)
+            hovered tt.Action("Is what it takes.")
+
+        textbutton "Three.":
+            action Return(3)
+            hovered tt.Action("A crowd.")
+
+        text tt.value
+
+
+
+
+
+
+
+Actions 
+Actions are invoked when a button (including imagebuttons,
+textbuttons, and hotspots) is activated, hovered, or
+unhovered. Actions may determine when a button is selected or
+insensitive.
+Along with these actions, an action may be a function that does not
+take any arguments. The function is called when the action is
+invoked. If the action returns a value, then the value is returned
+from an interaction.
+A list of actions can usually be provided in lieu of a single action,
+in which case the actions in the list are run in order.
+
+Control Actions 
+These are actions that manage screens, interaction results, and control flow.
+
+
+Call(label, *args, **kwargs) 
+Ends the current statement, and calls label, given as a string.
+Arguments and keyword arguments are passed to renpy.call().
+
+
+
+Hide(screen=None, transition=None, _layer=None) 
+This causes a screen to be hidden if it is shown.
+
+screen
+Either a string giving the name of the screen to be hidden, or
+None to hide the current screen.
+transition
+If not None, a transition that occurs when hiding the screen.
+_layer
+This is passed as the layer argument to renpy.hide_screen().
+Ignored if screen is None.
+
+
+
+
+Jump(label) 
+Causes control to transfer to label, given as a string.
+
+
+
+NullAction(*args, **kwargs) 
+Does nothing.
+This can be used to make a button responsive to hover/unhover events,
+without actually doing anything.
+
+
+
+Return(value=None) 
+Causes the current interaction to return the supplied value, which
+must not be None. This is often used with menus and imagemaps, to
+select what the return value of the interaction is. If the screen
+was called using the call screen statement, the return value
+is placed in the _return variable.
+When in a menu, this returns from the menu. (The value should be
+None in this case.)
+
+
+
+Show(screen, transition=None, *args, **kwargs) 
+This causes another screen to be shown. screen is a string
+giving the name of the screen. The arguments are
+passed to the screen being shown.
+If not None, transition is used to show the new screen.
+This action takes the _layer, _zorder and _tag keyword
+arguments, which have the same meaning as in the
+renpy.show_screen() function.
+
+
+
+ShowTransient(screen, transition=None, *args, **kwargs) 
+Shows a transient screen. A transient screen will be hidden when
+the current interaction completes. The arguments are
+passed to the screen being shown.
+If not None, transition is use to show the new screen.
+This action takes the _layer, _zorder and _tag keyword
+arguments, which have the same meaning as in the
+renpy.show_screen() function.
+
+
+
+ToggleScreen(screen, transition=None, *args, **kwargs) 
+This toggles the visibility of screen. If it is not currently
+shown, the screen is shown with the provided arguments. Otherwise,
+the screen is hidden.
+If not None, transition is use to show and hide the screen.
+This action takes the _layer, _zorder and _tag keyword
+arguments, which have the same meaning as in the
+renpy.show_screen() function.
+
+
+
+Data Actions 
+These set or toggle data.
+
+
+AddToSet(set, value) 
+Adds value to set.
+
+set
+The set to add to. This may be a Python set or list, in which
+case the value is appended to the list.
+value
+The value to add or append.
+
+
+
+
+RemoveFromSet(set, value) 
+Removes value from set.
+
+set
+The set to remove from. This may be a set or list.
+value
+The value to remove.
+
+
+
+
+SetDict(dict, key, value) 
+Causes the value of key in dict to be set to value.
+This also works with lists, where key is the index at which
+the value will be set.
+
+
+
+SetField(object, field, value) 
+Causes the a field on an object to be set to a given value.
+object is the object, field is a string giving the name of the
+field to set, and value is the value to set it to.
+
+
+
+SetLocalVariable(name, value) 
+Causes the variable called name to be set to value in the current
+local context.
+This function is only useful in a screen that has been used by
+another screen, as it provides a way of setting the value of a
+variable inside the used screen. In all other cases,
+SetScreenVariable() should be preferred, as it allows more
+of the screen to be cached.
+For more information, see Use.
+This must be created in the context that the variable is set
+in - it can't be passed in from somewhere else.
+
+
+
+SetScreenVariable(name, value) 
+Causes the variable called name associated with the current screen
+to be set to value.
+In a used screen, this action sets the variable in the context
+of the screen containing the used one(s).
+To set variables within a used screen, and only in that
+case, use SetLocalVariable() instead.
+
+
+
+SetVariable(name, value) 
+Causes the variable called name to be set to value.
+The name argument must be a string, and can be a simple name like "strength", or
+one with dots separating the variable from fields, like "hero.strength"
+or "persistent.show_cutscenes".
+
+
+
+ToggleDict(dict, key, true_value=None, false_value=None) 
+Toggles the value of key in dict. It also works on
+lists, in which case key is the index of the value to toggle.
+Toggling means to invert the value when the action is performed.
+
+true_value
+If not None, then this is the true value used.
+false_value
+If not None, then this is the false value used.
+
+
+
+
+ToggleField(object, field, true_value=None, false_value=None) 
+Toggles field on object. Toggling means to invert the boolean
+value of that field when the action is performed.
+
+true_value
+If not None, then this is the true value we use.
+false_value
+If not None, then this is the false value we use.
+
+
+
+
+ToggleLocalVariable(name, true_value=None, false_value=None) 
+Toggles the value of the variable called name in the current local context.
+This function is only useful in a screen that has been used by
+another screen, as it provides a way of setting the value of a
+variable inside the used screen. In all other cases,
+ToggleScreenVariable() should be preferred, as it allows more
+of the screen to be cached.
+For more information, see Use.
+This must be created in the context that the variable is set
+in - it can't be passed in from somewhere else.
+
+true_value
+If not None, then this is the true value used.
+false_value
+If not None, then this is the false value used.
+
+
+
+
+ToggleScreenVariable(name, true_value=None, false_value=None) 
+Toggles the value of the variable called name in the current screen.
+In a used screen, this action accesses and sets the given variable
+in the context of the screen containing the used one(s).
+To access and set variables within a used screen, and only in that
+case, use ToggleLocalVariable() instead.
+
+true_value
+If not None, then this is the true value used.
+false_value
+If not None, then this is the false value used.
+
+
+
+
+ToggleSetMembership(set, value) 
+Toggles the membership of value in set. If the value is not
+in the set, it's added. Otherwise, it is removed.
+Buttons with this action are marked as selected if and only if the
+value is in the set.
+
+set
+The set to add to or remove from. This may be a set or list. In the
+case of a list, new items are appended.
+value
+The value to add or append.
+
+
+
+
+ToggleVariable(variable, true_value=None, false_value=None) 
+Toggles the variable whose name is given in variable.
+The variable argument must be a string, and can be a simple name like "strength", or
+one with dots separating the variable from fields, like "hero.strength"
+or "persistent.show_cutscenes".
+
+true_value
+If not None, then this is the true value used.
+false_value
+If not None, then this is the false value used.
+
+
+
+
+Menu Actions 
+These actions invoke menus, or are primarily useful while in the main
+or game menus.
+
+
+MainMenu(confirm=True, save=True) 
+Causes Ren'Py to return to the main menu.
+
+confirm
+If true, causes Ren'Py to ask the user if he wishes to
+return to the main menu, rather than returning
+directly.
+save
+If true, the game is saved in _quit_slot before Ren'Py
+restarts and returns the user to the main menu. The game is not
+saved if _quit_slot is None.
+
+
+
+
+Quit(confirm=None) 
+Quits the game.
+
+confirm
+If true, prompts the user if he wants to quit, rather
+than quitting directly. If None, asks if and only if
+the user is not at the main menu.
+
+
+
+
+ShowMenu(screen=None, *args, **kwargs) 
+Causes us to enter the game menu, if we're not there already. If we
+are in the game menu, then this shows a screen or jumps to a label.
+screen is usually the name of a screen, which is shown using
+the screen mechanism. If the screen doesn't exist, then "_screen"
+is appended to it, and that label is jumped to.
+If the optional keyword argument _transition is given, the
+menu will change screens using the provided transition.
+If not manually specified, the default transition is
+config.intra_transition.
+
+ShowMenu("load")
+ShowMenu("save")
+ShowMenu("preferences")
+
+This can also be used to show user-defined menu screens. For
+example, if one has a "stats" screen defined, one can
+show it as part of the game menu using:
+
+ShowMenu("stats")
+
+ShowMenu without an argument will enter the game menu at the
+default screen, taken from _game_menu_screen.
+Extra arguments and keyword arguments are passed on to the screen
+
+
+
+Start(label=u'start') 
+Causes Ren'Py to jump out of the menu context to the named
+label. The main use of this is to start a new game from the
+main menu. Common uses are:
+
+Start() - Start at the start label.
+Start("foo") - Start at the "foo" label.
+
+
+
+
+File Actions 
+These actions handle saving, loading, and deleting of files. Many of these
+take the name and page arguments.
+
+name
+The name of the file to save to. This can be a string or an integer. It's
+combined with the page to create the filename.
+page
+The page that this action acts on. This is one of "auto",
+"quick", or a positive integer. If None, the page is determined
+automatically, based on a persistent page number.
+
+
+
+FileAction(name, page=None, **kwargs) 
+"Does the right thing" with the file. This means loading it if the
+load screen is showing (current screen is named "load"), and saving
+otherwise.
+
+name
+The name of the slot to save to or load from. If None, an unused slot
+(a large number based on the current time) will be used.
+page
+The page that the file will be saved to or loaded from. If None, the
+current page is used.
+
+Other keyword arguments are passed to FileLoad or FileSave.
+
+
+
+FileDelete(name, confirm=True, page=None, slot=False) 
+Deletes the file.
+
+name
+The name of the slot to delete.
+confirm
+If true and not at the main menu, prompt for confirmation before loading the file.
+page
+The page that the file will be loaded from. If None, the
+current page is used.
+slot
+If True, name is taken to be a slot name, and page is ignored.
+
+
+
+
+FileLoad(name, confirm=True, page=None, newest=True, cycle=False, slot=False) 
+Loads the file.
+
+name
+The name of the slot to load from. If None, an unused slot will be
+used, and hence the file will not be loadable.
+confirm
+If true and not at the main menu, prompt for confirmation before loading the file.
+page
+The page that the file will be loaded from. If None, the
+current page is used.
+newest
+If true, the button is selected if this is the newest file.
+cycle
+Ignored.
+slot
+If True, name is taken to be a slot name, and page is ignored.
+
+
+
+
+FilePage(page) 
+Sets the file page to page, which should be one of "auto", "quick",
+or an integer.
+
+
+
+FilePageNext(max=None, wrap=False, auto=True, quick=True) 
+Goes to the next file page.
+
+max
+If set, this should be an integer that gives the number of
+the maximum file page we can go to.
+wrap
+If true, we can go to the first page when on the
+last file page if max is set.
+auto
+If true and wrap is set, this can bring the player to
+the page of automatic saves.
+quick
+If true and wrap is set, this can bring the player to
+the page of automatic saves.
+
+
+
+
+FilePagePrevious(max=None, wrap=False, auto=True, quick=True) 
+Goes to the previous file page, if possible.
+
+max
+If set, this should be an integer that gives the number of
+the maximum file page we can go to. This is required to enable
+wrap.
+wrap
+If true, we can go to the last page when on the first file page if max is set.
+auto
+If true, this can bring the player to
+the page of automatic saves.
+quick
+If true, this can bring the player to
+the page of automatic saves.
+
+
+
+
+FileSave(name, confirm=True, newest=True, page=None, cycle=False, slot=False) 
+Saves the file.
+The button with this slot is selected if it's marked as the
+newest save file.
+
+name
+The name of the slot to save to. If None, an unused slot
+(a large number based on the current time) will be used.
+confirm
+If true, then we will prompt before overwriting a file.
+newest
+Ignored.
+page
+The name of the page that the slot is on. If None, the current
+page is used.
+cycle
+If true, then saves on the supplied page will be cycled before
+being shown to the user. config.quicksave_slots slots are
+used in the cycle.
+slot
+If True, name is taken to be a slot name, and page is ignored.
+
+
+
+
+FileTakeScreenshot(*args, **kwargs) 
+Take a screenshot to be used when the game is saved. This can
+be used to ensure that the screenshot is accurate, by taking
+a picture of the screen before a file save screen is shown.
+
+
+
+QuickLoad(confirm=True) 
+Performs a quick load.
+
+confirm
+If true and not at the main menu, prompt for confirmation before loading the file.
+
+
+
+
+QuickSave(message=u'Quick save complete.', newest=False) 
+Performs a quick save.
+
+message
+A message to display to the user when the quick save finishes.
+newest
+Set to true to mark the quicksave as the newest save.
+
+
+
+
+Audio Actions 
+The concept of channels and how they work, as well as most information
+about audio in Ren'Py, is explained at Audio.
+
+
+PauseAudio(channel, value=True) 
+Sets the pause flag for channel.
+If value is True, the channel is paused. If False, the channel is
+unpaused. If "toggle", the pause flag will be toggled.
+
+
+
+Play(channel, file, selected=None, **kwargs) 
+Causes an audio file to be played on a given channel.
+
+channel
+The channel to play the sound on.
+file
+The file to play.
+selected
+If True, buttons using this action will be marked as selected
+if the file is playing on the channel. If False, this action
+will not cause the button to start playing. If None, the button
+is marked selected if the channel is a music channel, and not
+otherwise.
+
+Any other keyword arguments are passed to renpy.music.play().
+
+
+
+Queue(channel, file, **kwargs) 
+Causes an audio file to be queued on a given channel.
+
+channel
+The channel to play the sound on.
+file
+The file to play.
+
+Any keyword arguments are passed to renpy.music.queue()
+
+
+
+SetMixer(mixer, volume) 
+Sets the volume of mixer to value.
+
+mixer
+The mixer to set the volume of. A string, usually one of
+"main", "music", "sfx", or "voice". See Volume for
+more information about mixers.
+value
+The value to set the volume to. A number between 0.0 and 1.0,
+inclusive.
+
+
+
+
+SetMute(mixer, mute) 
+Sets the mute status of one or more mixers. When a mixer is muted,
+audio channels associated with that mixer will stop playing audio.
+
+mixer
+Either a single string giving a mixer name, or a list of strings
+giving a list of mixers. The strings should be mixer names.
+mute
+True to mute the mixer, False to ummute it.
+
+
+
+
+Stop(channel, **kwargs) 
+Causes an audio channel to be stopped.
+
+channel
+The channel to stop the sound on.
+
+Any keyword arguments are passed to renpy.music.stop()
+
+
+
+ToggleMute(mixer) 
+Toggles the mute status of one or more mixers.
+
+mixer
+Either a single string giving a mixer name, or a list of strings
+giving a list of mixers. The strings should be mixer names.
+
+
+
+
+Focus Actions 
+
+
+CaptureFocus(name=u'default') 
+If a displayable is focused when this action is run, the rectangle
+containing that displayable is stored with the name name. This
+rectangle can then be retrieved with the GetFocusRect() action,
+or the focus property of the Nearrect displayable.
+If no displayable is focused, the previous capture with that name
+is removed.
+
+name
+The name of the focus rectangle to store. This should be a string.
+The name "tooltip" is special, as it is automatically captured
+when the tooltip is changed.
+
+
+
+
+ClearFocus(name=u'default') 
+Clears a stored focus rectangle captured with CaptureFocus().
+
+
+
+GetFocusRect(name=u'default') 
+If a focus rectangle with the given name has been stored (either with
+CaptureFocus(), or automatically by a tooltip, returns the
+a (x, y, h, w) rectangle. Otherwise, returns None.
+
+name
+The name of the focus rectangle to retrieve. The name "tooltip"
+is special, as it is automatically captured when the tooltip is
+changed.
+
+
+
+
+ToggleFocus(name=u'default') 
+If the focus rectangle exists, clears it, otherwise captures it.
+
+name
+The name of the focus rectangle to store. This should be a string.
+The name "tooltip" is special, as it is automatically captured
+when the tooltip is changed.
+
+
+
+
+Other Actions 
+These are other actions, not found anywhere else.
+
+
+Confirm(prompt, yes, no=None, confirm_selected=False) 
+Prompts the user for confirmation of an action. If the user
+clicks yes, the yes action is performed. Otherwise, the no
+action is performed.
+
+prompt
+The prompt to display to the user.
+confirm_selected
+If true, the prompt will be displayed even if the yes action
+is already selected. If false (the default), the prompt
+will not be displayed if the yes action is selected.
+
+The sensitivity and selectedness of this action match those
+of the yes action.
+
+
+
+DisableAllInputValues() 
+Disables all active InputValue. This will re-focus the default
+InputValue, if there is one. Otherwise, no InputValue will be
+focused.
+
+
+
+Function(callable, *args, **kwargs) 
+This Action calls callable with args and kwargs.
+
+callable
+Callable object. This assumes that if two callables compare
+equal, calling either one will be equivalent.
+args
+position arguments to be passed to callable.
+kwargs
+keyword arguments to be passed to callable.
+
+This Action takes an optional _update_screens keyword argument, which
+defaults to true. When it is true, the interaction restarts and
+the screens are updated after the function returns.
+If the function returns a non-None value, the interaction stops and
+returns that value. (When called using the call screen statement, the
+result is placed in the _return variable.)
+Instead of using a Function action, you can define your own subclass
+of the Action class. This lets you name the action, and
+determine when it should be selected and sensitive.
+
+
+
+Help(help=None) 
+Displays help.
+If a screen named help is defined, that screen is displayed
+using ShowMenu() and help is ignored.
+
+help
+A string that is used to find help. This is used in the
+following way:
+
+If a label with this name exists, the label is called in
+a new context.
+Otherwise, this is interpreted as giving the name of a file
+that should be opened in a web browser.
+
+If help is None, config.help is used as the default
+value.
+
+
+
+
+
+HideInterface(*args, **kwargs) 
+Causes the interface to be hidden until the user clicks.
+This is typically what happens when hitting the H key in a Ren'Py game.
+
+
+
+If(expression, true=None, false=None) 
+This returns true if expression is true, and false
+otherwise. Use this to select an action based on an expression.
+Note that the default, None, can be used as an action that causes
+a button to be disabled.
+
+
+
+InvertSelected(action) 
+This inverts the selection state of the provided action, while
+proxying over all of the other methods.
+
+
+
+MouseMove(x, y, duration=0) 
+Move the mouse pointer to x, y. If the device does not have a mouse
+pointer or _preferences.mouse_move is False, this does nothing.
+
+duration
+The time it will take to perform the move, in seconds. During
+this time, the mouse may be unresponsive.
+
+
+
+
+Notify(message) 
+Displays message using renpy.notify().
+
+
+
+OpenDirectory(directory) 
+Opens directory in a file browser. directory is relative to
+the config.basedir.
+
+
+
+OpenURL(url) 
+Causes url to be opened in a web browser.
+
+
+
+QueueEvent(event, up=False) 
+Queues the given event using renpy.queue_event().
+
+
+
+RestartStatement(*args, **kwargs) 
+This action causes Ren'Py to rollback to before the current
+statement, and then re-run the current statement. This may be used
+when changing a persistent variable that affects how the statement
+is displayed.
+If run in a menu context, this waits until the player exits to a
+top-level context before performing the rollback.
+
+
+
+RollForward(*args, **kwargs) 
+This action causes a rollforward to occur, if a roll forward is
+possible. Otherwise, it is insensitive.
+
+
+
+Rollback(*args, force="menu", **kwargs) 
+This action causes a rollback to occur, when a rollback is possible.
+Otherwise, nothing happens.
+The arguments are given to renpy.rollback(). This includes the
+force argument which here defaults to "menu".
+
+
+
+RollbackToIdentifier(identifier) 
+This causes a rollback to an identifier to occur. Rollback
+identifiers are returned as part of HistoryEntry objects.
+
+
+
+Screenshot(*args, **kwargs) 
+Takes a screenshot.
+
+
+
+Scroll(id, direction, amount=u'step') 
+Causes a Bar, Viewport, or Vpgrid to scroll.
+
+id
+The id of a bar, viewport, or vpgrid in the current screen.
+direction
+For a vbar, one of "increase" or "decrease". For a viewport
+or vpgrid, one of "horizontal increase", "vertical increase",
+"horizontal decrease", or "vertical decrease".
+amount
+The amount to scroll by. This can be a number of pixels, or
+else "step" or "page".
+
+
+
+
+SelectedIf(expression) 
+This indicates that one action in a list of actions should be used
+to determine if a button is selected. This only makes sense
+when the button has a list of actions. For example:
+# The button is selected only if mars_flag is True
+textbutton "Marsopolis":
+    action [ SelectedIf(SetVariable("mars_flag", True)), SetVariable("on_mars", True) ]
+
+
+The action inside SelectedIf is run normally when the button is clicked.
+
+
+
+SensitiveIf(expression) 
+This indicates that one action in a list of actions should be used
+to determine if a button is sensitive. This only makes sense
+when the button has a list of actions. For example:
+# The button is sensitive only if mars_flag is True
+textbutton "Marsopolis":
+    action [ SensitiveIf(SetVariable("mars_flag", True)), SetVariable("on_mars", True) ]
+
+
+The action inside SensitiveIf is run normally when the button is clicked.
+
+
+
+Skip(fast=False, confirm=False) 
+Causes the game to begin skipping. If the game is in a menu
+context, then this returns to the game. Otherwise, it just
+enables skipping.
+
+fast
+If true, skips directly to the next menu choice.
+confirm
+If true, asks for confirmation before beginning skipping.
+
+
+
+
+With(transition) 
+Causes transition to occur.
+
+Additional actions are available in other pages of this documentation, such
+as Language, Replay and EndReplay,
+gui.SetPreference and gui.TogglePreference,
+StylePreference, and the voice actions.
+Other actions can be created using the Action class.
+
+
+
+Control Actions 
+These are actions that manage screens, interaction results, and control flow.
+
+
+Call(label, *args, **kwargs) 
+Ends the current statement, and calls label, given as a string.
+Arguments and keyword arguments are passed to renpy.call().
+
+
+
+Hide(screen=None, transition=None, _layer=None) 
+This causes a screen to be hidden if it is shown.
+
+screen
+Either a string giving the name of the screen to be hidden, or
+None to hide the current screen.
+transition
+If not None, a transition that occurs when hiding the screen.
+_layer
+This is passed as the layer argument to renpy.hide_screen().
+Ignored if screen is None.
+
+
+
+
+Jump(label) 
+Causes control to transfer to label, given as a string.
+
+
+
+NullAction(*args, **kwargs) 
+Does nothing.
+This can be used to make a button responsive to hover/unhover events,
+without actually doing anything.
+
+
+
+Return(value=None) 
+Causes the current interaction to return the supplied value, which
+must not be None. This is often used with menus and imagemaps, to
+select what the return value of the interaction is. If the screen
+was called using the call screen statement, the return value
+is placed in the _return variable.
+When in a menu, this returns from the menu. (The value should be
+None in this case.)
+
+
+
+Show(screen, transition=None, *args, **kwargs) 
+This causes another screen to be shown. screen is a string
+giving the name of the screen. The arguments are
+passed to the screen being shown.
+If not None, transition is used to show the new screen.
+This action takes the _layer, _zorder and _tag keyword
+arguments, which have the same meaning as in the
+renpy.show_screen() function.
+
+
+
+ShowTransient(screen, transition=None, *args, **kwargs) 
+Shows a transient screen. A transient screen will be hidden when
+the current interaction completes. The arguments are
+passed to the screen being shown.
+If not None, transition is use to show the new screen.
+This action takes the _layer, _zorder and _tag keyword
+arguments, which have the same meaning as in the
+renpy.show_screen() function.
+
+
+
+ToggleScreen(screen, transition=None, *args, **kwargs) 
+This toggles the visibility of screen. If it is not currently
+shown, the screen is shown with the provided arguments. Otherwise,
+the screen is hidden.
+If not None, transition is use to show and hide the screen.
+This action takes the _layer, _zorder and _tag keyword
+arguments, which have the same meaning as in the
+renpy.show_screen() function.
+
+
+
+Data Actions 
+These set or toggle data.
+
+
+AddToSet(set, value) 
+Adds value to set.
+
+set
+The set to add to. This may be a Python set or list, in which
+case the value is appended to the list.
+value
+The value to add or append.
+
+
+
+
+RemoveFromSet(set, value) 
+Removes value from set.
+
+set
+The set to remove from. This may be a set or list.
+value
+The value to remove.
+
+
+
+
+SetDict(dict, key, value) 
+Causes the value of key in dict to be set to value.
+This also works with lists, where key is the index at which
+the value will be set.
+
+
+
+SetField(object, field, value) 
+Causes the a field on an object to be set to a given value.
+object is the object, field is a string giving the name of the
+field to set, and value is the value to set it to.
+
+
+
+SetLocalVariable(name, value) 
+Causes the variable called name to be set to value in the current
+local context.
+This function is only useful in a screen that has been used by
+another screen, as it provides a way of setting the value of a
+variable inside the used screen. In all other cases,
+SetScreenVariable() should be preferred, as it allows more
+of the screen to be cached.
+For more information, see Use.
+This must be created in the context that the variable is set
+in - it can't be passed in from somewhere else.
+
+
+
+SetScreenVariable(name, value) 
+Causes the variable called name associated with the current screen
+to be set to value.
+In a used screen, this action sets the variable in the context
+of the screen containing the used one(s).
+To set variables within a used screen, and only in that
+case, use SetLocalVariable() instead.
+
+
+
+SetVariable(name, value) 
+Causes the variable called name to be set to value.
+The name argument must be a string, and can be a simple name like "strength", or
+one with dots separating the variable from fields, like "hero.strength"
+or "persistent.show_cutscenes".
+
+
+
+ToggleDict(dict, key, true_value=None, false_value=None) 
+Toggles the value of key in dict. It also works on
+lists, in which case key is the index of the value to toggle.
+Toggling means to invert the value when the action is performed.
+
+true_value
+If not None, then this is the true value used.
+false_value
+If not None, then this is the false value used.
+
+
+
+
+ToggleField(object, field, true_value=None, false_value=None) 
+Toggles field on object. Toggling means to invert the boolean
+value of that field when the action is performed.
+
+true_value
+If not None, then this is the true value we use.
+false_value
+If not None, then this is the false value we use.
+
+
+
+
+ToggleLocalVariable(name, true_value=None, false_value=None) 
+Toggles the value of the variable called name in the current local context.
+This function is only useful in a screen that has been used by
+another screen, as it provides a way of setting the value of a
+variable inside the used screen. In all other cases,
+ToggleScreenVariable() should be preferred, as it allows more
+of the screen to be cached.
+For more information, see Use.
+This must be created in the context that the variable is set
+in - it can't be passed in from somewhere else.
+
+true_value
+If not None, then this is the true value used.
+false_value
+If not None, then this is the false value used.
+
+
+
+
+ToggleScreenVariable(name, true_value=None, false_value=None) 
+Toggles the value of the variable called name in the current screen.
+In a used screen, this action accesses and sets the given variable
+in the context of the screen containing the used one(s).
+To access and set variables within a used screen, and only in that
+case, use ToggleLocalVariable() instead.
+
+true_value
+If not None, then this is the true value used.
+false_value
+If not None, then this is the false value used.
+
+
+
+
+ToggleSetMembership(set, value) 
+Toggles the membership of value in set. If the value is not
+in the set, it's added. Otherwise, it is removed.
+Buttons with this action are marked as selected if and only if the
+value is in the set.
+
+set
+The set to add to or remove from. This may be a set or list. In the
+case of a list, new items are appended.
+value
+The value to add or append.
+
+
+
+
+ToggleVariable(variable, true_value=None, false_value=None) 
+Toggles the variable whose name is given in variable.
+The variable argument must be a string, and can be a simple name like "strength", or
+one with dots separating the variable from fields, like "hero.strength"
+or "persistent.show_cutscenes".
+
+true_value
+If not None, then this is the true value used.
+false_value
+If not None, then this is the false value used.
+
+
+
+
+Menu Actions 
+These actions invoke menus, or are primarily useful while in the main
+or game menus.
+
+
+MainMenu(confirm=True, save=True) 
+Causes Ren'Py to return to the main menu.
+
+confirm
+If true, causes Ren'Py to ask the user if he wishes to
+return to the main menu, rather than returning
+directly.
+save
+If true, the game is saved in _quit_slot before Ren'Py
+restarts and returns the user to the main menu. The game is not
+saved if _quit_slot is None.
+
+
+
+
+Quit(confirm=None) 
+Quits the game.
+
+confirm
+If true, prompts the user if he wants to quit, rather
+than quitting directly. If None, asks if and only if
+the user is not at the main menu.
+
+
+
+
+ShowMenu(screen=None, *args, **kwargs) 
+Causes us to enter the game menu, if we're not there already. If we
+are in the game menu, then this shows a screen or jumps to a label.
+screen is usually the name of a screen, which is shown using
+the screen mechanism. If the screen doesn't exist, then "_screen"
+is appended to it, and that label is jumped to.
+If the optional keyword argument _transition is given, the
+menu will change screens using the provided transition.
+If not manually specified, the default transition is
+config.intra_transition.
+
+ShowMenu("load")
+ShowMenu("save")
+ShowMenu("preferences")
+
+This can also be used to show user-defined menu screens. For
+example, if one has a "stats" screen defined, one can
+show it as part of the game menu using:
+
+ShowMenu("stats")
+
+ShowMenu without an argument will enter the game menu at the
+default screen, taken from _game_menu_screen.
+Extra arguments and keyword arguments are passed on to the screen
+
+
+
+Start(label=u'start') 
+Causes Ren'Py to jump out of the menu context to the named
+label. The main use of this is to start a new game from the
+main menu. Common uses are:
+
+Start() - Start at the start label.
+Start("foo") - Start at the "foo" label.
+
+
+
+
+File Actions 
+These actions handle saving, loading, and deleting of files. Many of these
+take the name and page arguments.
+
+name
+The name of the file to save to. This can be a string or an integer. It's
+combined with the page to create the filename.
+page
+The page that this action acts on. This is one of "auto",
+"quick", or a positive integer. If None, the page is determined
+automatically, based on a persistent page number.
+
+
+
+FileAction(name, page=None, **kwargs) 
+"Does the right thing" with the file. This means loading it if the
+load screen is showing (current screen is named "load"), and saving
+otherwise.
+
+name
+The name of the slot to save to or load from. If None, an unused slot
+(a large number based on the current time) will be used.
+page
+The page that the file will be saved to or loaded from. If None, the
+current page is used.
+
+Other keyword arguments are passed to FileLoad or FileSave.
+
+
+
+FileDelete(name, confirm=True, page=None, slot=False) 
+Deletes the file.
+
+name
+The name of the slot to delete.
+confirm
+If true and not at the main menu, prompt for confirmation before loading the file.
+page
+The page that the file will be loaded from. If None, the
+current page is used.
+slot
+If True, name is taken to be a slot name, and page is ignored.
+
+
+
+
+FileLoad(name, confirm=True, page=None, newest=True, cycle=False, slot=False) 
+Loads the file.
+
+name
+The name of the slot to load from. If None, an unused slot will be
+used, and hence the file will not be loadable.
+confirm
+If true and not at the main menu, prompt for confirmation before loading the file.
+page
+The page that the file will be loaded from. If None, the
+current page is used.
+newest
+If true, the button is selected if this is the newest file.
+cycle
+Ignored.
+slot
+If True, name is taken to be a slot name, and page is ignored.
+
+
+
+
+FilePage(page) 
+Sets the file page to page, which should be one of "auto", "quick",
+or an integer.
+
+
+
+FilePageNext(max=None, wrap=False, auto=True, quick=True) 
+Goes to the next file page.
+
+max
+If set, this should be an integer that gives the number of
+the maximum file page we can go to.
+wrap
+If true, we can go to the first page when on the
+last file page if max is set.
+auto
+If true and wrap is set, this can bring the player to
+the page of automatic saves.
+quick
+If true and wrap is set, this can bring the player to
+the page of automatic saves.
+
+
+
+
+FilePagePrevious(max=None, wrap=False, auto=True, quick=True) 
+Goes to the previous file page, if possible.
+
+max
+If set, this should be an integer that gives the number of
+the maximum file page we can go to. This is required to enable
+wrap.
+wrap
+If true, we can go to the last page when on the first file page if max is set.
+auto
+If true, this can bring the player to
+the page of automatic saves.
+quick
+If true, this can bring the player to
+the page of automatic saves.
+
+
+
+
+FileSave(name, confirm=True, newest=True, page=None, cycle=False, slot=False) 
+Saves the file.
+The button with this slot is selected if it's marked as the
+newest save file.
+
+name
+The name of the slot to save to. If None, an unused slot
+(a large number based on the current time) will be used.
+confirm
+If true, then we will prompt before overwriting a file.
+newest
+Ignored.
+page
+The name of the page that the slot is on. If None, the current
+page is used.
+cycle
+If true, then saves on the supplied page will be cycled before
+being shown to the user. config.quicksave_slots slots are
+used in the cycle.
+slot
+If True, name is taken to be a slot name, and page is ignored.
+
+
+
+
+FileTakeScreenshot(*args, **kwargs) 
+Take a screenshot to be used when the game is saved. This can
+be used to ensure that the screenshot is accurate, by taking
+a picture of the screen before a file save screen is shown.
+
+
+
+QuickLoad(confirm=True) 
+Performs a quick load.
+
+confirm
+If true and not at the main menu, prompt for confirmation before loading the file.
+
+
+
+
+QuickSave(message=u'Quick save complete.', newest=False) 
+Performs a quick save.
+
+message
+A message to display to the user when the quick save finishes.
+newest
+Set to true to mark the quicksave as the newest save.
+
+
+
+
+Audio Actions 
+The concept of channels and how they work, as well as most information
+about audio in Ren'Py, is explained at Audio.
+
+
+PauseAudio(channel, value=True) 
+Sets the pause flag for channel.
+If value is True, the channel is paused. If False, the channel is
+unpaused. If "toggle", the pause flag will be toggled.
+
+
+
+Play(channel, file, selected=None, **kwargs) 
+Causes an audio file to be played on a given channel.
+
+channel
+The channel to play the sound on.
+file
+The file to play.
+selected
+If True, buttons using this action will be marked as selected
+if the file is playing on the channel. If False, this action
+will not cause the button to start playing. If None, the button
+is marked selected if the channel is a music channel, and not
+otherwise.
+
+Any other keyword arguments are passed to renpy.music.play().
+
+
+
+Queue(channel, file, **kwargs) 
+Causes an audio file to be queued on a given channel.
+
+channel
+The channel to play the sound on.
+file
+The file to play.
+
+Any keyword arguments are passed to renpy.music.queue()
+
+
+
+SetMixer(mixer, volume) 
+Sets the volume of mixer to value.
+
+mixer
+The mixer to set the volume of. A string, usually one of
+"main", "music", "sfx", or "voice". See Volume for
+more information about mixers.
+value
+The value to set the volume to. A number between 0.0 and 1.0,
+inclusive.
+
+
+
+
+SetMute(mixer, mute) 
+Sets the mute status of one or more mixers. When a mixer is muted,
+audio channels associated with that mixer will stop playing audio.
+
+mixer
+Either a single string giving a mixer name, or a list of strings
+giving a list of mixers. The strings should be mixer names.
+mute
+True to mute the mixer, False to ummute it.
+
+
+
+
+Stop(channel, **kwargs) 
+Causes an audio channel to be stopped.
+
+channel
+The channel to stop the sound on.
+
+Any keyword arguments are passed to renpy.music.stop()
+
+
+
+ToggleMute(mixer) 
+Toggles the mute status of one or more mixers.
+
+mixer
+Either a single string giving a mixer name, or a list of strings
+giving a list of mixers. The strings should be mixer names.
+
+
+
+
+Focus Actions 
+
+
+CaptureFocus(name=u'default') 
+If a displayable is focused when this action is run, the rectangle
+containing that displayable is stored with the name name. This
+rectangle can then be retrieved with the GetFocusRect() action,
+or the focus property of the Nearrect displayable.
+If no displayable is focused, the previous capture with that name
+is removed.
+
+name
+The name of the focus rectangle to store. This should be a string.
+The name "tooltip" is special, as it is automatically captured
+when the tooltip is changed.
+
+
+
+
+ClearFocus(name=u'default') 
+Clears a stored focus rectangle captured with CaptureFocus().
+
+
+
+GetFocusRect(name=u'default') 
+If a focus rectangle with the given name has been stored (either with
+CaptureFocus(), or automatically by a tooltip, returns the
+a (x, y, h, w) rectangle. Otherwise, returns None.
+
+name
+The name of the focus rectangle to retrieve. The name "tooltip"
+is special, as it is automatically captured when the tooltip is
+changed.
+
+
+
+
+ToggleFocus(name=u'default') 
+If the focus rectangle exists, clears it, otherwise captures it.
+
+name
+The name of the focus rectangle to store. This should be a string.
+The name "tooltip" is special, as it is automatically captured
+when the tooltip is changed.
+
+
+
+
+Other Actions 
+These are other actions, not found anywhere else.
+
+
+Confirm(prompt, yes, no=None, confirm_selected=False) 
+Prompts the user for confirmation of an action. If the user
+clicks yes, the yes action is performed. Otherwise, the no
+action is performed.
+
+prompt
+The prompt to display to the user.
+confirm_selected
+If true, the prompt will be displayed even if the yes action
+is already selected. If false (the default), the prompt
+will not be displayed if the yes action is selected.
+
+The sensitivity and selectedness of this action match those
+of the yes action.
+
+
+
+DisableAllInputValues() 
+Disables all active InputValue. This will re-focus the default
+InputValue, if there is one. Otherwise, no InputValue will be
+focused.
+
+
+
+Function(callable, *args, **kwargs) 
+This Action calls callable with args and kwargs.
+
+callable
+Callable object. This assumes that if two callables compare
+equal, calling either one will be equivalent.
+args
+position arguments to be passed to callable.
+kwargs
+keyword arguments to be passed to callable.
+
+This Action takes an optional _update_screens keyword argument, which
+defaults to true. When it is true, the interaction restarts and
+the screens are updated after the function returns.
+If the function returns a non-None value, the interaction stops and
+returns that value. (When called using the call screen statement, the
+result is placed in the _return variable.)
+Instead of using a Function action, you can define your own subclass
+of the Action class. This lets you name the action, and
+determine when it should be selected and sensitive.
+
+
+
+Help(help=None) 
+Displays help.
+If a screen named help is defined, that screen is displayed
+using ShowMenu() and help is ignored.
+
+help
+A string that is used to find help. This is used in the
+following way:
+
+If a label with this name exists, the label is called in
+a new context.
+Otherwise, this is interpreted as giving the name of a file
+that should be opened in a web browser.
+
+If help is None, config.help is used as the default
+value.
+
+
+
+
+
+HideInterface(*args, **kwargs) 
+Causes the interface to be hidden until the user clicks.
+This is typically what happens when hitting the H key in a Ren'Py game.
+
+
+
+If(expression, true=None, false=None) 
+This returns true if expression is true, and false
+otherwise. Use this to select an action based on an expression.
+Note that the default, None, can be used as an action that causes
+a button to be disabled.
+
+
+
+InvertSelected(action) 
+This inverts the selection state of the provided action, while
+proxying over all of the other methods.
+
+
+
+MouseMove(x, y, duration=0) 
+Move the mouse pointer to x, y. If the device does not have a mouse
+pointer or _preferences.mouse_move is False, this does nothing.
+
+duration
+The time it will take to perform the move, in seconds. During
+this time, the mouse may be unresponsive.
+
+
+
+
+Notify(message) 
+Displays message using renpy.notify().
+
+
+
+OpenDirectory(directory) 
+Opens directory in a file browser. directory is relative to
+the config.basedir.
+
+
+
+OpenURL(url) 
+Causes url to be opened in a web browser.
+
+
+
+QueueEvent(event, up=False) 
+Queues the given event using renpy.queue_event().
+
+
+
+RestartStatement(*args, **kwargs) 
+This action causes Ren'Py to rollback to before the current
+statement, and then re-run the current statement. This may be used
+when changing a persistent variable that affects how the statement
+is displayed.
+If run in a menu context, this waits until the player exits to a
+top-level context before performing the rollback.
+
+
+
+RollForward(*args, **kwargs) 
+This action causes a rollforward to occur, if a roll forward is
+possible. Otherwise, it is insensitive.
+
+
+
+Rollback(*args, force="menu", **kwargs) 
+This action causes a rollback to occur, when a rollback is possible.
+Otherwise, nothing happens.
+The arguments are given to renpy.rollback(). This includes the
+force argument which here defaults to "menu".
+
+
+
+RollbackToIdentifier(identifier) 
+This causes a rollback to an identifier to occur. Rollback
+identifiers are returned as part of HistoryEntry objects.
+
+
+
+Screenshot(*args, **kwargs) 
+Takes a screenshot.
+
+
+
+Scroll(id, direction, amount=u'step') 
+Causes a Bar, Viewport, or Vpgrid to scroll.
+
+id
+The id of a bar, viewport, or vpgrid in the current screen.
+direction
+For a vbar, one of "increase" or "decrease". For a viewport
+or vpgrid, one of "horizontal increase", "vertical increase",
+"horizontal decrease", or "vertical decrease".
+amount
+The amount to scroll by. This can be a number of pixels, or
+else "step" or "page".
+
+
+
+
+SelectedIf(expression) 
+This indicates that one action in a list of actions should be used
+to determine if a button is selected. This only makes sense
+when the button has a list of actions. For example:
+# The button is selected only if mars_flag is True
+textbutton "Marsopolis":
+    action [ SelectedIf(SetVariable("mars_flag", True)), SetVariable("on_mars", True) ]
+
+
+The action inside SelectedIf is run normally when the button is clicked.
+
+
+
+SensitiveIf(expression) 
+This indicates that one action in a list of actions should be used
+to determine if a button is sensitive. This only makes sense
+when the button has a list of actions. For example:
+# The button is sensitive only if mars_flag is True
+textbutton "Marsopolis":
+    action [ SensitiveIf(SetVariable("mars_flag", True)), SetVariable("on_mars", True) ]
+
+
+The action inside SensitiveIf is run normally when the button is clicked.
+
+
+
+Skip(fast=False, confirm=False) 
+Causes the game to begin skipping. If the game is in a menu
+context, then this returns to the game. Otherwise, it just
+enables skipping.
+
+fast
+If true, skips directly to the next menu choice.
+confirm
+If true, asks for confirmation before beginning skipping.
+
+
+
+
+With(transition) 
+Causes transition to occur.
+
+Additional actions are available in other pages of this documentation, such
+as Language, Replay and EndReplay,
+gui.SetPreference and gui.TogglePreference,
+StylePreference, and the voice actions.
+Other actions can be created using the Action class.
+
+
+Bar Values 
+Bar values are used with bars, to set the bar value, and to allow the bar
+to adjust an underlying property. To create a new bar value, subclass
+the BarValue class. All classes that have the step keyword also accept
+the force_step keyword whose behavior is described in ui.adjustment().
+
+
+AnimatedValue(value=0.0, range=1.0, delay=1.0, old_value=None) 
+This animates a value, taking delay seconds to vary the value from
+old_value to value.
+
+value
+The value itself, a number.
+range
+The range of the value, a number.
+delay
+The time it takes to animate the value, in seconds. Defaults
+to 1.0.
+old_value
+The old value. If this is None, then the value is taken from the
+AnimatedValue we replaced, if any. Otherwise, it is initialized
+to value.
+
+
+
+
+AudioPositionValue(channel=u'music', update_interval=0.1) 
+A value that shows the playback position of the audio file playing
+in channel.
+
+update_interval
+How often the value updates, in seconds.
+
+
+
+
+DictValue(dict, key, range, max_is_zero=False, style=u'bar', offset=0, step=None, action=None, force_step=False) 
+A value that allows the user to adjust the value of a key
+in a dict.
+
+dict
+The dict.
+key
+The key.
+range
+The range to adjust over.
+max_is_zero
+If True, then when the value of a key is zero, the value of the
+bar will be range, and all other values will be shifted down by 1.
+This works both ways - when the bar is set to the maximum, the
+value of a key is set to 0.
+style
+The styles of the bar created.
+offset
+An offset to add to the value.
+step
+The amount to change the bar by. If None, defaults to 1/10th of
+the bar.
+action
+If not None, an action to call when the field has changed.
+
+
+
+
+FieldValue(object, field, range, max_is_zero=False, style=u'bar', offset=0, step=None, action=None, force_step=False) 
+A bar value that allows the user to adjust the value of a field
+on an object.
+
+object
+The object.
+field
+The field, a string.
+range
+The range to adjust over.
+max_is_zero
+If True, then when the field is zero, the value of the
+bar will be range, and all other values will be shifted
+down by 1. This works both ways - when the bar is set to
+the maximum, the field is set to 0.
+This is used internally, for some preferences.
+
+style
+The styles of the bar created.
+offset
+An offset to add to the value.
+step
+The amount to change the bar by. If None, defaults to 1/10th of
+the bar.
+action
+If not None, an action to call when the field has changed.
+
+
+
+
+MixerValue(mixer) 
+The value of an audio mixer.
+
+mixer
+The name of the mixer to adjust. This is usually one of
+"main", "music", "sfx", or "voice". See Volume
+for more information.
+
+
+
+
+ScreenVariableValue(variable, range, max_is_zero=False, style=u'bar', offset=0, step=None, action=None, force_step=False) 
+A bar value that adjusts the value of a variable in a screen.
+
+variable
+A string giving the name of the variable to adjust.
+range
+The range to adjust over.
+max_is_zero
+If True, then when the field is zero, the value of the
+bar will be range, and all other values will be shifted
+down by 1. This works both ways - when the bar is set to
+the maximum, the field is set to 0.
+This is used internally, for some preferences.
+
+style
+The styles of the bar created.
+offset
+An offset to add to the value.
+step
+The amount to change the bar by. If None, defaults to 1/10th of
+the bar.
+action
+If not None, an action to call when the field has changed.
+
+
+
+
+StaticValue(value=0.0, range=1.0) 
+This allows a value to be specified statically.
+
+value
+The value itself, a number.
+range
+The range of the value.
+
+
+
+
+VariableValue(variable, range, max_is_zero=False, style=u'bar', offset=0, step=None, action=None, force_step=False) 
+A bar value that allows the user to adjust the value of a variable
+in the default store.
+
+variable
+A string giving the name of the variable to adjust.
+range
+The range to adjust over.
+max_is_zero
+If True, then when the field is zero, the value of the
+bar will be range, and all other values will be shifted
+down by 1. This works both ways - when the bar is set to
+the maximum, the field is set to 0.
+This is used internally, for some preferences.
+
+style
+The styles of the bar created.
+offset
+An offset to add to the value.
+step
+The amount to change the bar by. If None, defaults to 1/10th of
+the bar.
+action
+If not None, an action to call when the field has changed.
+
+
+
+
+XScrollValue(viewport) 
+The value of an adjustment that horizontally scrolls the viewport with the
+given id, on the current screen. The viewport must be defined before a bar
+with this value is.
+
+
+
+YScrollValue(viewport) 
+The value of an adjustment that vertically scrolls the viewport with the
+given id, on the current screen. The viewport must be defined before a bar
+with this value is.
+
+
+
+Input Values 
+Input values are used with text inputs, to set the default text, to accept
+changed text, to respond to the enter key, and to determine if the text is
+editable by default. To create a new input value, subclass the InputValue
+class.
+Ren'Py-defined input values inherit from InputValue, which means that
+all values also include Enable(), Disable(), and Toggle() methods that return
+actions that enable, disable, and toggle editing, respectively. See also
+the DisableAllInputValues() action.
+
+
+DictInputValue(dict, key, default=True, returnable=False) 
+An input value that updates key in dict.
+
+default
+If true, this input can be editable by default.
+returnable
+If true, the value of this input will be returned when the
+user presses enter.
+
+
+
+
+FieldInputValue(object, field, default=True, returnable=False) 
+An input value that updates field on object.
+
+field
+A string giving the name of the field.
+default
+If true, this input can be editable by default.
+returnable
+If true, the value of this input will be returned when the
+user presses enter.
+
+
+
+
+FilePageNameInputValue(pattern=u'Page {}', auto=u'Automatic saves', quick=u'Quick saves', page=None, default=False) 
+An input value that updates the name of a file page.
+
+pattern
+This is used for the default name of a page. Python-style substition
+is performed, such that {} is replaced with the number of the page.
+auto
+The name of the autosave page.
+quick
+The name of the quicksave page.
+page
+If given, the number of the page to display. This should usually
+be left as None, to give the current page.
+default
+If true, this input can be editable by default.
+
+
+
+
+ScreenVariableInputValue(variable, default=True, returnable=False) 
+An input value that updates variable.
+
+variable
+A string giving the name of the variable to update.
+default
+If true, this input can be editable by default.
+returnable
+If true, the value of this input will be returned when the
+user presses enter.
+
+
+
+
+VariableInputValue(variable, default=True, returnable=False) 
+An input value that updates variable.
+
+variable
+A string giving the name of the variable to update.
+default
+If true, this input can be editable by default.
+returnable
+If true, the value of this input will be returned when the
+user presses enter.
+
+
+
+
+Functions and Classes 
+These functions and classes are useful in association with screens.
+
+Preferences 
+While all preferences can be defined based on the Actions and Values
+given above, it requires some knowledge of Ren'Py to figure out the
+correct one to use. The preferences constructor makes this easy,
+by creation an action or value, as appropriate, based on the
+names used in the default preferences screen.
+
+
+Preference(name, value=None, range=None) 
+This constructs the appropriate action or value from a preference.
+The preference name should be the name given in the standard
+menus, while the value should be either the name of a choice,
+"toggle" to cycle through choices, a specific value, or left off
+in the case of buttons.
+Actions that can be used with buttons and hotspots are:
+
+Preference("display", "fullscreen") - displays in fullscreen mode.
+Preference("display", "window") - displays in windowed mode at 1x normal size.
+Preference("display", 2.0) - displays in windowed mode at 2.0x normal size.
+Preference("display", "any window") - displays in windowed mode at the previous size.
+Preference("display", "toggle") - toggle display mode.
+Preference("transitions", "all") - show all transitions.
+Preference("transitions", "none") - do not show transitions.
+Preference("transitions", "toggle") - toggle transitions.
+Preference("video sprites", "show") - show all video sprites.
+Preference("video sprites", "hide") - fall back to images where possible.
+Preference("video sprites", "toggle") - toggle image fallback behavior.
+Preference("show empty window", "show") - Allow the "window show" and "window auto" statement to show an empty window outside of the say statement.
+Preference("show empty window", "hide") - Prevent the above.
+Preference("show empty window", "toggle") - Toggle the above.
+Preference("text speed", 0) - make text appear instantaneously.
+Preference("text speed", 142) - set text speed to 142 characters per second.
+Preference("joystick") - Show the joystick preferences.
+Preference("skip", "seen") - Only skip seen messages.
+Preference("skip", "all") - Skip unseen messages.
+Preference("skip", "toggle") - Toggle between skip seen and skip all.
+Preference("begin skipping") - Starts skipping.
+Preference("after choices", "skip") - Skip after choices.
+Preference("after choices", "stop") - Stop skipping after choices.
+Preference("after choices", "toggle") - Toggle skipping after choices.
+Preference("auto-forward time", 0) - Set the auto-forward time to infinite.
+Preference("auto-forward time", 10) - Set the auto-forward time (unit is seconds per 250 characters).
+Preference("auto-forward", "enable") - Enable auto-forward mode.
+Preference("auto-forward", "disable") - Disable auto-forward mode.
+Preference("auto-forward", "toggle") - Toggle auto-forward mode.
+Preference("auto-forward after click", "enable") - Remain in auto-forward mode after a click.
+Preference("auto-forward after click", "disable") - Disable auto-forward mode after a click.
+Preference("auto-forward after click", "toggle") - Toggle auto-forward after click.
+Preference("automatic move", "enable") - Enable automatic mouse mode.
+Preference("automatic move", "disable") - Disable automatic mouse mode.
+Preference("automatic move", "toggle") - Toggle automatic mouse mode.
+Preference("wait for voice", "enable")  - Wait for the currently playing voice to complete before auto-forwarding.
+Preference("wait for voice", "disable") - Do not wait for the currently playing voice to complete before auto-forwarding.
+Preference("wait for voice", "toggle")  - Toggle wait voice.
+Preference("voice sustain", "enable")  - Sustain voice past the current interaction.
+Preference("voice sustain", "disable") - Don't sustain voice past the current interaction.
+Preference("voice sustain", "toggle")  - Toggle voice sustain.
+Preference("music mute", "enable") - Mute the music mixer.
+Preference("music mute", "disable") - Un-mute the music mixer.
+Preference("music mute", "toggle") - Toggle music mute.
+Preference("sound mute", "enable") - Mute the sound mixer.
+Preference("sound mute", "disable") - Un-mute the sound mixer.
+Preference("sound mute", "toggle") - Toggle sound mute.
+Preference("voice mute", "enable") - Mute the voice mixer.
+Preference("voice mute", "disable") - Un-mute the voice mixer.
+Preference("voice mute", "toggle") - Toggle voice mute.
+Preference("mixer <mixer> mute", "enable") - Mute the specified mixer.
+Preference("mixer <mixer> mute", "disable") - Unmute the specified mixer.
+Preference("mixer <mixer> mute", "toggle") - Toggle mute of the specified mixer.
+Preference("all mute", "enable") - Mute each individual mixer.
+Preference("all mute", "disable") - Unmute each individual mixer.
+Preference("all mute", "toggle") - Toggle mute of each individual mixer.
+Preference("main volume", 0.5) - Set the adjustment applied to all channels.
+Preference("music volume", 0.5) - Set the music volume.
+Preference("sound volume", 0.5) - Set the sound volume.
+Preference("voice volume", 0.5) - Set the voice volume.
+Preference("mixer <mixer> volume", 0.5) - Set the specified mixer volume.
+Preference("emphasize audio", "enable") - Emphasize the audio channels found in config.emphasize_audio_channels.
+Preference("emphasize audio", "disable") - Do not emphasize audio channels.
+Preference("emphasize audio", "toggle") - Toggle emphasize audio.
+Preference("self voicing", "enable") - Enables self-voicing.
+Preference("self voicing", "disable") - Disable self-voicing.
+Preference("self voicing", "toggle") - Toggles self-voicing.
+Preference("self voicing volume drop", 0.5) - Drops the volume of non-voice mixers when self voicing is active.
+Preference("clipboard voicing", "enable") - Enables clipboard-voicing.
+Preference("clipboard voicing", "disable") - Disable clipboard-voicing.
+Preference("clipboard voicing", "toggle") - Toggles clipboard-voicing.
+Preference("debug voicing", "enable") - Enables self-voicing debug
+Preference("debug voicing", "disable") - Disable self-voicing debug.
+Preference("debug voicing", "toggle") - Toggles self-voicing debug.
+Preference("rollback side", "left") - Touching the left side of the screen causes rollback.
+Preference("rollback side", "right") - Touching the right side of the screen causes rollback.
+Preference("rollback side", "disable") - Touching the screen will not cause rollback.
+Preference("gl powersave", True) - Drop framerate to allow for power savings.
+Preference("gl powersave", False) - Do not drop framerate to allow for power savings.
+Preference("gl powersave", "auto") - Enable powersave when running on battery.
+Preference("gl framerate", None) - Runs at the display framerate.
+Preference("gl framerate", 60) - Runs at the given framerate.
+Preference("gl tearing", True) - Tears rather than skipping frames.
+Preference("gl tearing", False) - Skips frames rather than tearing.
+Preference("font transform", "opendyslexic") - Sets the accessibility font transform to opendyslexic.
+Preference("font transform", "dejavusans") - Sets the accessibility font transform to deja vu sans.
+Preference("font transform", None) - Disables the accessibility font transform.
+Preference("font size", 1.0) - Sets the accessibility font size scaling factor.
+Preference("font line spacing", 1.0) - Sets the accessibility font vertical spacing scaling factor.
+Preference("system cursor", "enable") - Use system cursor ignoring config.mouse.
+Preference("system cursor", "disable") - Use cursor defined in config.mouse.
+Preference("system cursor", "toggle") - Toggle system cursor.
+Preference("high contrast text", "enable") - Enables white text on a black background.
+Preference("high contrast text", "disable") - Disables high contrast text.
+Preference("high contrast text", "toggle") - Toggles high contrast text.
+Preference("audio when minimized", "enable") - Enable sounds playing when the window is not in focus.
+Preference("audio when minimized", "disable") - Disable sounds playing when the window is not in focus.
+Preference("audio when minimized", "toggle") - Toggle sounds playing when the window is not in focus.
+
+Values that can be used with bars are:
+
+Preference("text speed")
+Preference("auto-forward time")
+Preference("main volume")
+Preference("music volume")
+Preference("sound volume")
+Preference("voice volume")
+Preference("mixer <mixer> volume")
+Preference("self voicing volume drop")
+Preference("font size")
+Preference("font line spacing")
+
+The range parameter can be given to give the range of certain bars.
+For "text speed", it defaults to 200 cps. For "auto-forward time", it
+defaults to 30.0 seconds per chunk of text. (These are maximums, not
+defaults.)
+Actions that can be used with buttons are:
+
+Preference("renderer menu") - Show the renderer menu.
+Preference("accessibility menu") - Show the accessibility menu.
+
+These screens are intended for internal use, and are not customizable.
+
+
+
+GetCharacterVolume(voice_tag) 
+This returns the volume associated with voice tag, a number
+between 0.0 and 1.0, which is interpreted as a fraction of the
+mixer volume for the voice channel.
+
+
+
+Gamepad 
+These functions and actions work with the gamepad.
+
+
+GamepadCalibrate() 
+An action that invokes the gamepad calibration routine.
+
+
+
+GamepadExists(developer=True) 
+A function that returns true if a gamepad is present, and false otherwise.
+
+developer
+Forces this function to always return true while config.developer
+is true.
+
+
+
+
+File Functions 
+These functions return useful information about files. They use the
+same default page as the file actions.
+
+
+FileCurrentPage() 
+Returns the current file page as a string.
+
+
+
+FileCurrentScreenshot(empty=None, **properties) 
+A displayable that shows the screenshot that will be saved with the current
+file, if a screenshot has been taken when entering a menu or with
+FileTakeScreenshot().
+If there is no current screenshot, empty is shown in its place. (If empty is
+None, it defaults to Null().)
+
+
+
+FileJson(name, key=None, empty=None, missing=None, page=None, slot=False) 
+Accesses the Json information associated with name.
+This always returns empty if the slot is empty.
+If not, and if key is None, returns the entire dictionary containing the Json data.
+Otherwise, this returns json[key] if key is defined on the json object of the save,
+and missing if there is a save with the given name, but it does not contain key.
+Such Json data is added to a save slot by callbacks registered using
+config.save_json_callbacks.
+
+
+
+FileLoadable(name, page=None, slot=False) 
+This is a function that returns true
+if the file is loadable, and false otherwise.
+
+
+
+FileNewest(name, page=None, slot=False) 
+Returns True if this is the newest file slot, or False otherwise.
+
+
+
+FilePageName(auto=u'a', quick=u'q') 
+Returns the name of the current file page, as a string. If a normal
+page, this returns the page number. Otherwise, it returns
+auto or quick.
+
+
+
+FileSaveName(name, empty=u'', page=None, slot=False) 
+Return the save_name that was in effect when the file was saved,
+or empty if the file does not exist.
+
+
+
+FileScreenshot(name, empty=None, page=None, slot=False) 
+Returns the screenshot associated with the given file. If the
+file is not loadable, then empty is returned, unless it's None,
+in which case, a Null displayable is created.
+The return value is a displayable.
+
+
+
+FileSlotName(slot, slots_per_page, auto=u'a', quick=u'q', format=u'%s%d') 
+Returns the name of the numbered slot. This assumes that slots on
+normal pages are numbered in a linear order starting with 1, and
+that page numbers start with 1. When slot is 2, and slots_per_page
+is 10, and the other variables are the defaults:
+
+When the first page is showing, this returns "2".
+When the second page is showing, this returns "12".
+When the auto page is showing, this returns "a2".
+When the quicksave page is showing, this returns "q2".
+
+
+slot
+The number of the slot to access.
+slots_per_page
+The number of slots per page.
+auto
+A prefix to use for the auto page.
+quick
+A prefix to use for the quick page.
+format
+The formatting code to use. This is given two arguments: A string
+giving the page prefix, and an integer giving the slot number.
+
+
+
+
+FileTime(name, format=u'%b %d, %H:%M', empty=u'', page=None, slot=False) 
+Returns the time the file was saved, formatted according
+to the supplied format. If the file is not found, empty is
+returned.
+The return value is a string.
+
+
+
+FileUsedSlots(page=None, highest_first=True) 
+Returns a list of used numeric file slots on the page.
+
+page
+The name of the page that will be scanned. If None, the current page
+is used.
+highest_first
+If true, the highest-numbered file slot is listed first.
+Otherwise, the lowest-numbered slot is listed first.
+
+
+
+
+Side Image Functions 
+This function returns the side image to use.
+
+
+SideImage() 
+Returns the side image associated with the currently speaking character,
+or a Null displayable if no such side image exists.
+
+
+
+Tooltips 
+Tooltips can now be accessed by the tooltip property available on all
+displayables, and the GetTooltip function. The GetTooltip function
+returns the value of the tooltip property when the displayable
+gains focus.
+Here's an example:
+screen tooltip_example():
+    vbox:
+        textbutton "North":
+            action Return("n")
+            tooltip "To meet a polar bear."
+
+        textbutton "South":
+            action Return("s")
+            tooltip "All the way to the tropics."
+
+        textbutton "East":
+            action Return("e")
+            tooltip "So we can embrace the dawn."
+
+        textbutton "West":
+            action Return("w")
+            tooltip "Where to go to see the best sunsets."
+
+        $ tooltip = GetTooltip()
+
+        if tooltip:
+            text "[tooltip]"
+
+
+The Nearrect displayable can be used to display "popup-style" tooltips,
+and has support for a special "tooltip" focus name, that is set to the location
+of the last focus that set a tooltip:
+screen tooltip_example2():
+    frame:
+
+        padding (20, 20)
+        align (.5, .3)
+
+        has vbox
+
+        textbutton "North":
+            action Return("n")
+            tooltip "To meet a polar bear."
+
+        textbutton "South":
+            action Return("s")
+            tooltip "All the way to the tropics."
+
+        textbutton "East":
+            action Return("e")
+            tooltip "So we can embrace the dawn."
+
+        textbutton "West":
+            action Return("w")
+            tooltip "Where to go to see the best sunsets."
+
+    # This has to be the last thing shown in the screen.
+
+    $ tooltip = GetTooltip()
+
+    if tooltip:
+
+        nearrect:
+            focus "tooltip"
+            prefer_top True
+
+            frame:
+                xalign 0.5
+                text tooltip
+
+
+
+
+GetTooltip(screen=None, last=False) 
+Returns the tooltip of the currently focused displayable, or None
+if no displayable is focused.
+
+screen
+If not None, this should be the name or tag of a screen. If
+given, this function only returns the tooltip if the focused
+displayable is part of the screen.
+last
+If true, returns the last non-None value this function would
+have returned.
+
+
+
+Legacy 
+
+Warning
+This has been obsoleted by the above, but you might see it in older projects.
+
+The tooltip class changes the screen when a button is hovered.
+
+
+class Tooltip(default) 
+A tooltip object can be used to define a portion of a screen that is
+updated when the mouse hovers an area.
+A tooltip object has a value field, which is set to the default
+value passed to the constructor when the tooltip is created. When
+a button using an action created by the tooltip is hovered, the
+value field changes to the value associated with the action.
+
+
+Action(value) 
+Returns an action that is generally used as the hovered property
+of a button. When the button is hovered, the value field of this
+tooltip is set to value. When the button loses focus, the
+value field of this tooltip reverts to the default.
+
+
+When using a tooltip with a screen, the usual behavior is to create a
+tooltip object in a default statement. The value of the tooltip and
+the action method can then be used within the screen. The order of
+use within a screen doesn't matter â it's possible to use the value
+before an action is used.
+Tooltips can take on any value. While in the example below we use the
+text statement to display a string on the screen, it's also possible
+to use the add statement to add a displayable. More complex behavior
+is also possible.
+screen tooltip_test:
+
+    default tt = Tooltip("No button selected.")
+
+    frame:
+        xfill True
+
+        has vbox
+
+        textbutton "One.":
+            action Return(1)
+            hovered tt.Action("The loneliest number.")
+
+        textbutton "Two.":
+            action Return(2)
+            hovered tt.Action("Is what it takes.")
+
+        textbutton "Three.":
+            action Return(3)
+            hovered tt.Action("A crowd.")
+
+        text tt.value
+
+
+
+
+
+
+Preferences 
+While all preferences can be defined based on the Actions and Values
+given above, it requires some knowledge of Ren'Py to figure out the
+correct one to use. The preferences constructor makes this easy,
+by creation an action or value, as appropriate, based on the
+names used in the default preferences screen.
+
+
+Preference(name, value=None, range=None) 
+This constructs the appropriate action or value from a preference.
+The preference name should be the name given in the standard
+menus, while the value should be either the name of a choice,
+"toggle" to cycle through choices, a specific value, or left off
+in the case of buttons.
+Actions that can be used with buttons and hotspots are:
+
+Preference("display", "fullscreen") - displays in fullscreen mode.
+Preference("display", "window") - displays in windowed mode at 1x normal size.
+Preference("display", 2.0) - displays in windowed mode at 2.0x normal size.
+Preference("display", "any window") - displays in windowed mode at the previous size.
+Preference("display", "toggle") - toggle display mode.
+Preference("transitions", "all") - show all transitions.
+Preference("transitions", "none") - do not show transitions.
+Preference("transitions", "toggle") - toggle transitions.
+Preference("video sprites", "show") - show all video sprites.
+Preference("video sprites", "hide") - fall back to images where possible.
+Preference("video sprites", "toggle") - toggle image fallback behavior.
+Preference("show empty window", "show") - Allow the "window show" and "window auto" statement to show an empty window outside of the say statement.
+Preference("show empty window", "hide") - Prevent the above.
+Preference("show empty window", "toggle") - Toggle the above.
+Preference("text speed", 0) - make text appear instantaneously.
+Preference("text speed", 142) - set text speed to 142 characters per second.
+Preference("joystick") - Show the joystick preferences.
+Preference("skip", "seen") - Only skip seen messages.
+Preference("skip", "all") - Skip unseen messages.
+Preference("skip", "toggle") - Toggle between skip seen and skip all.
+Preference("begin skipping") - Starts skipping.
+Preference("after choices", "skip") - Skip after choices.
+Preference("after choices", "stop") - Stop skipping after choices.
+Preference("after choices", "toggle") - Toggle skipping after choices.
+Preference("auto-forward time", 0) - Set the auto-forward time to infinite.
+Preference("auto-forward time", 10) - Set the auto-forward time (unit is seconds per 250 characters).
+Preference("auto-forward", "enable") - Enable auto-forward mode.
+Preference("auto-forward", "disable") - Disable auto-forward mode.
+Preference("auto-forward", "toggle") - Toggle auto-forward mode.
+Preference("auto-forward after click", "enable") - Remain in auto-forward mode after a click.
+Preference("auto-forward after click", "disable") - Disable auto-forward mode after a click.
+Preference("auto-forward after click", "toggle") - Toggle auto-forward after click.
+Preference("automatic move", "enable") - Enable automatic mouse mode.
+Preference("automatic move", "disable") - Disable automatic mouse mode.
+Preference("automatic move", "toggle") - Toggle automatic mouse mode.
+Preference("wait for voice", "enable")  - Wait for the currently playing voice to complete before auto-forwarding.
+Preference("wait for voice", "disable") - Do not wait for the currently playing voice to complete before auto-forwarding.
+Preference("wait for voice", "toggle")  - Toggle wait voice.
+Preference("voice sustain", "enable")  - Sustain voice past the current interaction.
+Preference("voice sustain", "disable") - Don't sustain voice past the current interaction.
+Preference("voice sustain", "toggle")  - Toggle voice sustain.
+Preference("music mute", "enable") - Mute the music mixer.
+Preference("music mute", "disable") - Un-mute the music mixer.
+Preference("music mute", "toggle") - Toggle music mute.
+Preference("sound mute", "enable") - Mute the sound mixer.
+Preference("sound mute", "disable") - Un-mute the sound mixer.
+Preference("sound mute", "toggle") - Toggle sound mute.
+Preference("voice mute", "enable") - Mute the voice mixer.
+Preference("voice mute", "disable") - Un-mute the voice mixer.
+Preference("voice mute", "toggle") - Toggle voice mute.
+Preference("mixer <mixer> mute", "enable") - Mute the specified mixer.
+Preference("mixer <mixer> mute", "disable") - Unmute the specified mixer.
+Preference("mixer <mixer> mute", "toggle") - Toggle mute of the specified mixer.
+Preference("all mute", "enable") - Mute each individual mixer.
+Preference("all mute", "disable") - Unmute each individual mixer.
+Preference("all mute", "toggle") - Toggle mute of each individual mixer.
+Preference("main volume", 0.5) - Set the adjustment applied to all channels.
+Preference("music volume", 0.5) - Set the music volume.
+Preference("sound volume", 0.5) - Set the sound volume.
+Preference("voice volume", 0.5) - Set the voice volume.
+Preference("mixer <mixer> volume", 0.5) - Set the specified mixer volume.
+Preference("emphasize audio", "enable") - Emphasize the audio channels found in config.emphasize_audio_channels.
+Preference("emphasize audio", "disable") - Do not emphasize audio channels.
+Preference("emphasize audio", "toggle") - Toggle emphasize audio.
+Preference("self voicing", "enable") - Enables self-voicing.
+Preference("self voicing", "disable") - Disable self-voicing.
+Preference("self voicing", "toggle") - Toggles self-voicing.
+Preference("self voicing volume drop", 0.5) - Drops the volume of non-voice mixers when self voicing is active.
+Preference("clipboard voicing", "enable") - Enables clipboard-voicing.
+Preference("clipboard voicing", "disable") - Disable clipboard-voicing.
+Preference("clipboard voicing", "toggle") - Toggles clipboard-voicing.
+Preference("debug voicing", "enable") - Enables self-voicing debug
+Preference("debug voicing", "disable") - Disable self-voicing debug.
+Preference("debug voicing", "toggle") - Toggles self-voicing debug.
+Preference("rollback side", "left") - Touching the left side of the screen causes rollback.
+Preference("rollback side", "right") - Touching the right side of the screen causes rollback.
+Preference("rollback side", "disable") - Touching the screen will not cause rollback.
+Preference("gl powersave", True) - Drop framerate to allow for power savings.
+Preference("gl powersave", False) - Do not drop framerate to allow for power savings.
+Preference("gl powersave", "auto") - Enable powersave when running on battery.
+Preference("gl framerate", None) - Runs at the display framerate.
+Preference("gl framerate", 60) - Runs at the given framerate.
+Preference("gl tearing", True) - Tears rather than skipping frames.
+Preference("gl tearing", False) - Skips frames rather than tearing.
+Preference("font transform", "opendyslexic") - Sets the accessibility font transform to opendyslexic.
+Preference("font transform", "dejavusans") - Sets the accessibility font transform to deja vu sans.
+Preference("font transform", None) - Disables the accessibility font transform.
+Preference("font size", 1.0) - Sets the accessibility font size scaling factor.
+Preference("font line spacing", 1.0) - Sets the accessibility font vertical spacing scaling factor.
+Preference("system cursor", "enable") - Use system cursor ignoring config.mouse.
+Preference("system cursor", "disable") - Use cursor defined in config.mouse.
+Preference("system cursor", "toggle") - Toggle system cursor.
+Preference("high contrast text", "enable") - Enables white text on a black background.
+Preference("high contrast text", "disable") - Disables high contrast text.
+Preference("high contrast text", "toggle") - Toggles high contrast text.
+Preference("audio when minimized", "enable") - Enable sounds playing when the window is not in focus.
+Preference("audio when minimized", "disable") - Disable sounds playing when the window is not in focus.
+Preference("audio when minimized", "toggle") - Toggle sounds playing when the window is not in focus.
+
+Values that can be used with bars are:
+
+Preference("text speed")
+Preference("auto-forward time")
+Preference("main volume")
+Preference("music volume")
+Preference("sound volume")
+Preference("voice volume")
+Preference("mixer <mixer> volume")
+Preference("self voicing volume drop")
+Preference("font size")
+Preference("font line spacing")
+
+The range parameter can be given to give the range of certain bars.
+For "text speed", it defaults to 200 cps. For "auto-forward time", it
+defaults to 30.0 seconds per chunk of text. (These are maximums, not
+defaults.)
+Actions that can be used with buttons are:
+
+Preference("renderer menu") - Show the renderer menu.
+Preference("accessibility menu") - Show the accessibility menu.
+
+These screens are intended for internal use, and are not customizable.
+
+
+
+GetCharacterVolume(voice_tag) 
+This returns the volume associated with voice tag, a number
+between 0.0 and 1.0, which is interpreted as a fraction of the
+mixer volume for the voice channel.
+
+
+
+Gamepad 
+These functions and actions work with the gamepad.
+
+
+GamepadCalibrate() 
+An action that invokes the gamepad calibration routine.
+
+
+
+GamepadExists(developer=True) 
+A function that returns true if a gamepad is present, and false otherwise.
+
+developer
+Forces this function to always return true while config.developer
+is true.
+
+
+
+
+File Functions 
+These functions return useful information about files. They use the
+same default page as the file actions.
+
+
+FileCurrentPage() 
+Returns the current file page as a string.
+
+
+
+FileCurrentScreenshot(empty=None, **properties) 
+A displayable that shows the screenshot that will be saved with the current
+file, if a screenshot has been taken when entering a menu or with
+FileTakeScreenshot().
+If there is no current screenshot, empty is shown in its place. (If empty is
+None, it defaults to Null().)
+
+
+
+FileJson(name, key=None, empty=None, missing=None, page=None, slot=False) 
+Accesses the Json information associated with name.
+This always returns empty if the slot is empty.
+If not, and if key is None, returns the entire dictionary containing the Json data.
+Otherwise, this returns json[key] if key is defined on the json object of the save,
+and missing if there is a save with the given name, but it does not contain key.
+Such Json data is added to a save slot by callbacks registered using
+config.save_json_callbacks.
+
+
+
+FileLoadable(name, page=None, slot=False) 
+This is a function that returns true
+if the file is loadable, and false otherwise.
+
+
+
+FileNewest(name, page=None, slot=False) 
+Returns True if this is the newest file slot, or False otherwise.
+
+
+
+FilePageName(auto=u'a', quick=u'q') 
+Returns the name of the current file page, as a string. If a normal
+page, this returns the page number. Otherwise, it returns
+auto or quick.
+
+
+
+FileSaveName(name, empty=u'', page=None, slot=False) 
+Return the save_name that was in effect when the file was saved,
+or empty if the file does not exist.
+
+
+
+FileScreenshot(name, empty=None, page=None, slot=False) 
+Returns the screenshot associated with the given file. If the
+file is not loadable, then empty is returned, unless it's None,
+in which case, a Null displayable is created.
+The return value is a displayable.
+
+
+
+FileSlotName(slot, slots_per_page, auto=u'a', quick=u'q', format=u'%s%d') 
+Returns the name of the numbered slot. This assumes that slots on
+normal pages are numbered in a linear order starting with 1, and
+that page numbers start with 1. When slot is 2, and slots_per_page
+is 10, and the other variables are the defaults:
+
+When the first page is showing, this returns "2".
+When the second page is showing, this returns "12".
+When the auto page is showing, this returns "a2".
+When the quicksave page is showing, this returns "q2".
+
+
+slot
+The number of the slot to access.
+slots_per_page
+The number of slots per page.
+auto
+A prefix to use for the auto page.
+quick
+A prefix to use for the quick page.
+format
+The formatting code to use. This is given two arguments: A string
+giving the page prefix, and an integer giving the slot number.
+
+
+
+
+FileTime(name, format=u'%b %d, %H:%M', empty=u'', page=None, slot=False) 
+Returns the time the file was saved, formatted according
+to the supplied format. If the file is not found, empty is
+returned.
+The return value is a string.
+
+
+
+FileUsedSlots(page=None, highest_first=True) 
+Returns a list of used numeric file slots on the page.
+
+page
+The name of the page that will be scanned. If None, the current page
+is used.
+highest_first
+If true, the highest-numbered file slot is listed first.
+Otherwise, the lowest-numbered slot is listed first.
+
+
+
+
+Side Image Functions 
+This function returns the side image to use.
+
+
+SideImage() 
+Returns the side image associated with the currently speaking character,
+or a Null displayable if no such side image exists.
+
+
+
+Tooltips 
+Tooltips can now be accessed by the tooltip property available on all
+displayables, and the GetTooltip function. The GetTooltip function
+returns the value of the tooltip property when the displayable
+gains focus.
+Here's an example:
+screen tooltip_example():
+    vbox:
+        textbutton "North":
+            action Return("n")
+            tooltip "To meet a polar bear."
+
+        textbutton "South":
+            action Return("s")
+            tooltip "All the way to the tropics."
+
+        textbutton "East":
+            action Return("e")
+            tooltip "So we can embrace the dawn."
+
+        textbutton "West":
+            action Return("w")
+            tooltip "Where to go to see the best sunsets."
+
+        $ tooltip = GetTooltip()
+
+        if tooltip:
+            text "[tooltip]"
+
+
+The Nearrect displayable can be used to display "popup-style" tooltips,
+and has support for a special "tooltip" focus name, that is set to the location
+of the last focus that set a tooltip:
+screen tooltip_example2():
+    frame:
+
+        padding (20, 20)
+        align (.5, .3)
+
+        has vbox
+
+        textbutton "North":
+            action Return("n")
+            tooltip "To meet a polar bear."
+
+        textbutton "South":
+            action Return("s")
+            tooltip "All the way to the tropics."
+
+        textbutton "East":
+            action Return("e")
+            tooltip "So we can embrace the dawn."
+
+        textbutton "West":
+            action Return("w")
+            tooltip "Where to go to see the best sunsets."
+
+    # This has to be the last thing shown in the screen.
+
+    $ tooltip = GetTooltip()
+
+    if tooltip:
+
+        nearrect:
+            focus "tooltip"
+            prefer_top True
+
+            frame:
+                xalign 0.5
+                text tooltip
+
+
+
+
+GetTooltip(screen=None, last=False) 
+Returns the tooltip of the currently focused displayable, or None
+if no displayable is focused.
+
+screen
+If not None, this should be the name or tag of a screen. If
+given, this function only returns the tooltip if the focused
+displayable is part of the screen.
+last
+If true, returns the last non-None value this function would
+have returned.
+
+
+
+Legacy 
+
+Warning
+This has been obsoleted by the above, but you might see it in older projects.
+
+The tooltip class changes the screen when a button is hovered.
+
+
+class Tooltip(default) 
+A tooltip object can be used to define a portion of a screen that is
+updated when the mouse hovers an area.
+A tooltip object has a value field, which is set to the default
+value passed to the constructor when the tooltip is created. When
+a button using an action created by the tooltip is hovered, the
+value field changes to the value associated with the action.
+
+
+Action(value) 
+Returns an action that is generally used as the hovered property
+of a button. When the button is hovered, the value field of this
+tooltip is set to value. When the button loses focus, the
+value field of this tooltip reverts to the default.
+
+
+When using a tooltip with a screen, the usual behavior is to create a
+tooltip object in a default statement. The value of the tooltip and
+the action method can then be used within the screen. The order of
+use within a screen doesn't matter â it's possible to use the value
+before an action is used.
+Tooltips can take on any value. While in the example below we use the
+text statement to display a string on the screen, it's also possible
+to use the add statement to add a displayable. More complex behavior
+is also possible.
+screen tooltip_test:
+
+    default tt = Tooltip("No button selected.")
+
+    frame:
+        xfill True
+
+        has vbox
+
+        textbutton "One.":
+            action Return(1)
+            hovered tt.Action("The loneliest number.")
+
+        textbutton "Two.":
+            action Return(2)
+            hovered tt.Action("Is what it takes.")
+
+        textbutton "Three.":
+            action Return(3)
+            hovered tt.Action("A crowd.")
+
+        text tt.value
+
+
+
+
+
+Legacy 
+
+Warning
+This has been obsoleted by the above, but you might see it in older projects.
+
+The tooltip class changes the screen when a button is hovered.
+
+
+class Tooltip(default) 
+A tooltip object can be used to define a portion of a screen that is
+updated when the mouse hovers an area.
+A tooltip object has a value field, which is set to the default
+value passed to the constructor when the tooltip is created. When
+a button using an action created by the tooltip is hovered, the
+value field changes to the value associated with the action.
+
+
+Action(value) 
+Returns an action that is generally used as the hovered property
+of a button. When the button is hovered, the value field of this
+tooltip is set to value. When the button loses focus, the
+value field of this tooltip reverts to the default.
+
+
+When using a tooltip with a screen, the usual behavior is to create a
+tooltip object in a default statement. The value of the tooltip and
+the action method can then be used within the screen. The order of
+use within a screen doesn't matter â it's possible to use the value
+before an action is used.
+Tooltips can take on any value. While in the example below we use the
+text statement to display a string on the screen, it's also possible
+to use the add statement to add a displayable. More complex behavior
+is also possible.
+screen tooltip_test:
+
+    default tt = Tooltip("No button selected.")
+
+    frame:
+        xfill True
+
+        has vbox
+
+        textbutton "One.":
+            action Return(1)
+            hovered tt.Action("The loneliest number.")
+
+        textbutton "Two.":
+            action Return(2)
+            hovered tt.Action("Is what it takes.")
+
+        textbutton "Three.":
+            action Return(3)
+            hovered tt.Action("A crowd.")
+
+        text tt.value
+
+
+

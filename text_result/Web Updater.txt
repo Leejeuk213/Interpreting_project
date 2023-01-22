@@ -1,0 +1,287 @@
+
+Web Updater 
+Ren'Py includes an updater that can automatically download and install
+updates to a Ren'Py game hosted at a website. This can be useful in
+keeping a large game up to date.
+The Ren'Py updater works by automatically performing the following
+steps:
+
+Downloading an index file that controls what is updated.
+Asking the user if he or she wants to proceed with the update.
+Producing an archive file from the files on disk.
+Downloading a zsync control file from the server.
+Using the zsync tool to update the archive file to the version on
+the server. Zsync automatically computes the differences between
+the two files, and attempts to only download the portions that
+have changed.
+Unpacking the archive, replacing the files on disk.
+Deleting files that have been removed between the old and new
+versions.
+Restarting the game.
+
+The Ren'Py updater shows an updater screen during this process,
+prompting the user to proceed and allowing the user to cancel
+when appropriate.
+
+Server Requirements 
+The updater requires that you provide your own hosting. You should be
+able to download the update files by going to the appropriate URL
+directly, and your server must support HTTP range queries.
+HTTPS is not supported for patching.
+(This means paying for web hosting, as "sharing" sites tend not to
+support the required features.)
+If the patch parameter is set to False, or an https url is given,
+the updater will not attempt to patch the game. Instead, it will
+download the full archive, and unpack that update. While this is a larger
+download, it will work with many more web servers.
+
+
+Building an Update 
+Updates are built automatically when distributions are built. To build
+an update, set build.include_update to True in options.rpy. This will
+unlock the "Build Updates" option in the "Build Distributions" section
+of the launcher. Check this option, and Ren'Py will create the update
+files.
+The update files consist of:
+
+updates.json
+An index of available updates and their versions.
+package.sums
+Contains checksums for each block in the package.
+package.update.gz
+Contains the update data for the given package.
+package.update.json
+Contains a list of the files in each package, which the updater
+uses when downloading DLC.
+package.zsync
+This is a control file that's used by zsync to manage the download.
+
+You must upload all these files to a single directory on your web
+server.
+
+
+Functions 
+To cause an update to occur, invoke either updater.update or the
+updater.Update action.
+
+
+updater.Update(*args, **kwargs) 
+An action that calls updater.update(). All arguments are
+stored and passed to that function.
+
+
+
+updater.UpdateVersion(url, check_interval=21600, simulate=None, **kwargs) 
+This function contacts the server at url, and determines if there is
+a newer version of software available at that url. If there is, this
+function returns the new version. Otherwise, it returns None.
+Since contacting the server can take some time, this function launches
+a thread in the background, and immediately returns the version from
+the last time the server was contacted, or None if the server has never
+been contacted. The background thread will restart the current interaction
+once the server has been contacted, which will cause screens that call
+this function to update.
+Each url will be contacted at most once per Ren'Py session, and not
+more than once every check_interval seconds. When the server is not
+contacted, cached data will be returned.
+Additional keyword arguments (including simulate) are passed to the
+update mechanism as if they were given to updater.update().
+
+
+
+updater.can_update(base=None) 
+Returns true if it's possible that an update can succeed. Returns false
+if updating is totally impossible. (For example, if the update directory
+was deleted.)
+Note that this does not determine if an update is actually available.
+To do that, use updater.UpdateVersion().
+
+
+
+updater.get_installed_packages(base=None) 
+Returns a list of installed DLC package names.
+
+base
+The base directory to update. Defaults to the current project's
+base directory.
+
+
+
+
+updater.update(url, base=None, force=False, public_key=None, simulate=None, add=[], restart=True, confirm=True, patch=True) 
+Updates this Ren'Py game to the latest version.
+
+url
+The URL to the updates.json file.
+base
+The base directory that will be updated. Defaults to the base
+of the current game. (This can usually be ignored.)
+force
+Force the update to occur even if the version numbers are
+the same. (Used for testing.)
+public_key
+The path to a PEM file containing a public key that the
+update signature is checked against. (This can usually be ignored.)
+simulate
+This is used to test update guis without actually performing
+an update. This can be:
+
+None to perform an update.
+"available" to test the case where an update is available.
+"not_available" to test the case where no update is available.
+"error" to test an update error.
+
+
+add
+A list of packages to add during this update. This is only necessary
+for dlc.
+restart
+Restart the game after the update.
+confirm
+Should Ren'Py prompt the user to confirm the update? If False, the
+update will proceed without confirmation.
+patch
+If true, Ren'Py will attempt to patch the game, downloading only
+changed data. If false, Ren'Py will download a complete copy of
+the game, and update from that. This is set to false automatically
+when the url does not begin with "http:".
+
+
+
+
+Screen 
+To customize the look of the updater, you may override the updater
+screen. The default screen is defined in common/00updater.rpy.
+
+
+
+Server Requirements 
+The updater requires that you provide your own hosting. You should be
+able to download the update files by going to the appropriate URL
+directly, and your server must support HTTP range queries.
+HTTPS is not supported for patching.
+(This means paying for web hosting, as "sharing" sites tend not to
+support the required features.)
+If the patch parameter is set to False, or an https url is given,
+the updater will not attempt to patch the game. Instead, it will
+download the full archive, and unpack that update. While this is a larger
+download, it will work with many more web servers.
+
+
+Building an Update 
+Updates are built automatically when distributions are built. To build
+an update, set build.include_update to True in options.rpy. This will
+unlock the "Build Updates" option in the "Build Distributions" section
+of the launcher. Check this option, and Ren'Py will create the update
+files.
+The update files consist of:
+
+updates.json
+An index of available updates and their versions.
+package.sums
+Contains checksums for each block in the package.
+package.update.gz
+Contains the update data for the given package.
+package.update.json
+Contains a list of the files in each package, which the updater
+uses when downloading DLC.
+package.zsync
+This is a control file that's used by zsync to manage the download.
+
+You must upload all these files to a single directory on your web
+server.
+
+
+Functions 
+To cause an update to occur, invoke either updater.update or the
+updater.Update action.
+
+
+updater.Update(*args, **kwargs) 
+An action that calls updater.update(). All arguments are
+stored and passed to that function.
+
+
+
+updater.UpdateVersion(url, check_interval=21600, simulate=None, **kwargs) 
+This function contacts the server at url, and determines if there is
+a newer version of software available at that url. If there is, this
+function returns the new version. Otherwise, it returns None.
+Since contacting the server can take some time, this function launches
+a thread in the background, and immediately returns the version from
+the last time the server was contacted, or None if the server has never
+been contacted. The background thread will restart the current interaction
+once the server has been contacted, which will cause screens that call
+this function to update.
+Each url will be contacted at most once per Ren'Py session, and not
+more than once every check_interval seconds. When the server is not
+contacted, cached data will be returned.
+Additional keyword arguments (including simulate) are passed to the
+update mechanism as if they were given to updater.update().
+
+
+
+updater.can_update(base=None) 
+Returns true if it's possible that an update can succeed. Returns false
+if updating is totally impossible. (For example, if the update directory
+was deleted.)
+Note that this does not determine if an update is actually available.
+To do that, use updater.UpdateVersion().
+
+
+
+updater.get_installed_packages(base=None) 
+Returns a list of installed DLC package names.
+
+base
+The base directory to update. Defaults to the current project's
+base directory.
+
+
+
+
+updater.update(url, base=None, force=False, public_key=None, simulate=None, add=[], restart=True, confirm=True, patch=True) 
+Updates this Ren'Py game to the latest version.
+
+url
+The URL to the updates.json file.
+base
+The base directory that will be updated. Defaults to the base
+of the current game. (This can usually be ignored.)
+force
+Force the update to occur even if the version numbers are
+the same. (Used for testing.)
+public_key
+The path to a PEM file containing a public key that the
+update signature is checked against. (This can usually be ignored.)
+simulate
+This is used to test update guis without actually performing
+an update. This can be:
+
+None to perform an update.
+"available" to test the case where an update is available.
+"not_available" to test the case where no update is available.
+"error" to test an update error.
+
+
+add
+A list of packages to add during this update. This is only necessary
+for dlc.
+restart
+Restart the game after the update.
+confirm
+Should Ren'Py prompt the user to confirm the update? If False, the
+update will proceed without confirmation.
+patch
+If true, Ren'Py will attempt to patch the game, downloading only
+changed data. If false, Ren'Py will download a complete copy of
+the game, and update from that. This is set to false automatically
+when the url does not begin with "http:".
+
+
+
+
+Screen 
+To customize the look of the updater, you may override the updater
+screen. The default screen is defined in common/00updater.rpy.
+

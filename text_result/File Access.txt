@@ -1,0 +1,107 @@
+
+File Access 
+These Python functions allow you to access asset files, which may be found
+in the game directory, RPA archives, or as Android assets.
+
+
+renpy.file(fn, encoding=None) 
+An alias for renpy.open_file(), for compatibility with older
+versions of Ren'Py.
+
+
+
+renpy.list_files(common=False) 
+Lists the files in the game directory and archive files. Returns
+a list of files, with / as the directory separator.
+
+common
+If true, files in the common directory are included in the
+listing.
+
+
+
+
+renpy.loadable(filename) 
+Returns True if the given filename is loadable, meaning that it
+can be loaded from the disk or from inside an archive. Returns
+False if this is not the case.
+
+
+
+renpy.open_file(fn, encoding=None) 
+Returns a read-only file-like object that accesses the file named fn. The file is
+accessed using Ren'Py's standard search method, and may reside in an RPA archive.
+or as an Android asset.
+The object supports a wide subset of the fields and methods found on Python's
+standard file object, opened in binary mode. (Basically, all of the methods that
+are sensible for a read-only file.)
+
+encoding
+If given, the file is open in text mode with the given encoding.
+If None, the default, the encoding is taken from config.open_file_encoding.
+If False, the file is opened in binary mode.
+
+
+
+Rarely Used 
+These functions are used more rarely.
+
+
+renpy.exists(filename) 
+Returns true if the given filename can be found in the
+searchpath. This only works if a physical file exists on disk. It
+won't find the file if it's inside of an archive.
+You almost certainly want to use renpy.loadable() in preference
+to this function.
+
+
+
+renpy.fsdecode(s) 
+Converts s from filesystem encoding to unicode.
+
+
+
+renpy.fsencode(s, force=False) 
+Converts s from unicode to the filesystem encoding.
+
+
+
+renpy.image_size(im) 
+Given an image manipulator, loads it and returns a (width,
+height) tuple giving its size.
+This reads the image in from disk and decompresses it, without
+using the image cache. This can be slow.
+
+
+
+
+Rarely Used 
+These functions are used more rarely.
+
+
+renpy.exists(filename) 
+Returns true if the given filename can be found in the
+searchpath. This only works if a physical file exists on disk. It
+won't find the file if it's inside of an archive.
+You almost certainly want to use renpy.loadable() in preference
+to this function.
+
+
+
+renpy.fsdecode(s) 
+Converts s from filesystem encoding to unicode.
+
+
+
+renpy.fsencode(s, force=False) 
+Converts s from unicode to the filesystem encoding.
+
+
+
+renpy.image_size(im) 
+Given an image manipulator, loads it and returns a (width,
+height) tuple giving its size.
+This reads the image in from disk and decompresses it, without
+using the image cache. This can be slow.
+
+

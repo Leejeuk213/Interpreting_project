@@ -1,0 +1,87 @@
+﻿Link, Index
+https://www.renpy.org/doc/html/quickstart.html, Quickstart
+https://www.renpy.org/doc/html/gui.html, GUI Customization Guide
+https://www.renpy.org/doc/html/language_basics.html, Language Basics
+https://www.renpy.org/doc/html/label.html, Labels & Control Flow
+https://www.renpy.org/doc/html/dialogue.html, Dialogue and Narration
+https://www.renpy.org/doc/html/displaying_images.html, Displaying Images
+https://www.renpy.org/doc/html/menus.html, In-Game Menus
+https://www.renpy.org/doc/html/python.html, Python Statements
+https://www.renpy.org/doc/html/conditional.html, Conditional Statements
+https://www.renpy.org/doc/html/audio.html, Audio
+https://www.renpy.org/doc/html/movie.html, Movie
+https://www.renpy.org/doc/html/voice.html, Voice
+https://www.renpy.org/doc/html/text.html, Text
+https://www.renpy.org/doc/html/translation.html, Translation
+https://www.renpy.org/doc/html/displayables.html, Displayables
+https://www.renpy.org/doc/html/transforms.html, Transforms
+https://www.renpy.org/doc/html/transitions.html, Transitions
+https://www.renpy.org/doc/html/atl.html, Animation and Transformation Language
+https://www.renpy.org/doc/html/matrixcolor.html, Matrixcolor
+https://www.renpy.org/doc/html/layeredimage.html, Layered Images
+https://www.renpy.org/doc/html/3dstage.html, 3D Stage
+https://www.renpy.org/doc/html/live2d.html, Live2D Cubism
+https://www.renpy.org/doc/html/style.html, Styles
+https://www.renpy.org/doc/html/style_properties.html, Style Properties
+https://www.renpy.org/doc/html/screens.html, Screens and Screen Language
+https://www.renpy.org/doc/html/screen_actions.html, Screen Actions, Values, and Functions
+https://www.renpy.org/doc/html/screen_special.html, Special Screen Names
+https://www.renpy.org/doc/html/screen_optimization.html, Screen Language Optimization
+https://www.renpy.org/doc/html/config.html, Configuration Variables
+https://www.renpy.org/doc/html/preferences.html, Preference Variables
+https://www.renpy.org/doc/html/store_variables.html, Store Variables
+https://www.renpy.org/doc/html/mouse.html, Custom Mouse Cursors
+https://www.renpy.org/doc/html/launcher.html, Launcher
+https://www.renpy.org/doc/html/developer_tools.html, Developer Tools
+https://www.renpy.org/doc/html/director.html, Interactive Director
+https://www.renpy.org/doc/html/nvl_mode.html, NVL-Mode Tutorial
+https://www.renpy.org/doc/html/input.html, Text Input
+https://www.renpy.org/doc/html/side_image.html, Side Images
+https://www.renpy.org/doc/html/rooms.html, Image Gallery, Music Room, and Replay Actions
+https://www.renpy.org/doc/html/drag_drop.html, Drag and Drop
+https://www.renpy.org/doc/html/sprites.html, Sprites
+https://www.renpy.org/doc/html/keymap.html, Customizing the Keymap
+https://www.renpy.org/doc/html/achievement.html, Achievements
+https://www.renpy.org/doc/html/history.html, Dialogue History
+https://www.renpy.org/doc/html/multiple.html, Multiple Character Dialogue
+https://www.renpy.org/doc/html/splashscreen_presplash.html, Splashscreen and Presplash
+https://www.renpy.org/doc/html/statement_equivalents.html, Statement Equivalents
+https://www.renpy.org/doc/html/save_load_rollback.html, Saving, Loading, and Rollback
+https://www.renpy.org/doc/html/persistent.html, Persistent Data
+https://www.renpy.org/doc/html/trans_trans_python.html, Transforms and Transitions in Python
+https://www.renpy.org/doc/html/gui_advanced.html, Advanced GUI
+https://www.renpy.org/doc/html/screen_python.html, Screens and Python
+https://www.renpy.org/doc/html/modes.html, Modes
+https://www.renpy.org/doc/html/cdd.html, Creator-Defined Displayables
+https://www.renpy.org/doc/html/cds.html, Creator-Defined Statements
+https://www.renpy.org/doc/html/custom_text_tags.html, Custom Text Tags
+https://www.renpy.org/doc/html/character_callbacks.html, Character Callbacks
+https://www.renpy.org/doc/html/file_python.html, File Access
+https://www.renpy.org/doc/html/color_class.html, Color Class
+https://www.renpy.org/doc/html/matrix.html, Matrix
+https://www.renpy.org/doc/html/model.html, Model-Based Rendering
+https://www.renpy.org/doc/html/other.html, Other Functions and Variables
+https://www.renpy.org/doc/html/build.html, Building Distributions
+https://www.renpy.org/doc/html/updater.html, Web Updater
+https://www.renpy.org/doc/html/android.html, Android
+https://www.renpy.org/doc/html/chromeos.html, Chrome OS and Chromebook
+https://www.renpy.org/doc/html/ios.html, iOS
+https://www.renpy.org/doc/html/iap.html, In-App Purchasing
+https://www.renpy.org/doc/html/gesture.html, Gestures
+https://www.renpy.org/doc/html/raspi.html, Raspberry Pi
+https://www.renpy.org/doc/html/security.html, Security
+https://www.renpy.org/doc/html/problems.html, Dealing with Problems
+https://www.renpy.org/doc/html/environment_variables.html, Environment Variables
+https://www.renpy.org/doc/html/self_voicing.html, Self-Voicing
+https://www.renpy.org/doc/html/editor.html, Text Editor Integration
+https://www.renpy.org/doc/html/skins.html, Skins
+https://www.renpy.org/doc/html/translating_renpy.html, Translating Ren'Py
+https://www.renpy.org/doc/html/changelog.html, Changelog (Ren'Py 7.x-)
+https://www.renpy.org/doc/html/changelog6.html, Changelog (Ren'Py 6.11 - 6.99)
+https://www.renpy.org/doc/html/incompatible.html, Incompatible Changes
+https://www.renpy.org/doc/html/distributor.html, Distributor Notes
+https://www.renpy.org/doc/html/license.html, License
+https://www.renpy.org/doc/html/credits.html, Credits
+https://www.renpy.org/doc/html/sponsors.html, Ren'Py Development Sponsors
+https://www.renpy.org/doc/html/thequestion.html, Script of The Question
+https://www.renpy.org/doc/html/thequestion_nvl.html, NVL-mode script for The Question
