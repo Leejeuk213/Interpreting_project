@@ -7,11 +7,14 @@ def return_main_text(htmls):
         soup=BeautifulSoup(response.text,"html.parser")
         last =soup.find('div',class_="col-md-9 content")
         sections=last.find_all('div',class_="section")
+        result=[]
         for section in sections :
             string=section.get_text()
             string=string.replace("link","")
-            file_name=f"{html['index']}.txt"
-            file = open(f'text_result/{file_name}','a',encoding='utf-8')
+            result.append(string)
+        file_name=f"{html['index']}.txt"
+        file = open(f'text_result/{file_name}','w',encoding='utf-8')
+        for string in result :
             print(string,file=file)
-            file.close()
+        file.close()
     return
