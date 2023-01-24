@@ -2,6 +2,15 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget
 
 
+class TranslationRuleBox(QTextEdit):
+	pass
+	# QTextEdit 아님
+\
+
+class TranslatedTextBox(QTextEdit):
+	pass
+
+
 class MyApp(QWidget):
 
 	def __init__(self):
@@ -13,12 +22,14 @@ class MyApp(QWidget):
 		grid = QGridLayout()
         self.setLayout(grid)
 
-        grid.addWidget(QLabel('Title:'), 0, 0)
-        grid.addWidget(QLabel('Author:'), 1, 0)
-        grid.addWidget(QLabel('Review:'), 2, 0)
+        grid.addWidget(QLabel('Menu'), 0, 0)
+        grid.addWidget(QLabel('원본:'), 1, 0)
+        grid.addWidget(QLabel('번역본:'), 1, 2)
+        grid.addWidget(QLabel('Rule'), 2, 0)
 
         grid.addWidget(QLineEdit(), 0, 1)
-        grid.addWidget(QLineEdit(), 1, 1)
+        grid.addWidget(QTextEdit(), 1, 1)
+        grid.addWidget(QTextEdit(), 1, 3)
         grid.addWidget(QTextEdit(), 2, 1)
 
 
